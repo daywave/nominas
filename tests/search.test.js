@@ -37,3 +37,11 @@ test("ordena por bruto descendente de forma predeterminada, también al buscar",
     assert.ok(matches.every((person, index) => index === 0 || matches[index - 1].bruto >= person.bruto));
   }
 });
+
+test('ordena de menor a mayor, también con búsqueda y filtros', () => {
+  for (const options of [{ order: 'asc' }, { order: 'asc', area: 'BIOLOGIA', group: 'professors' }]) {
+    const matches = findPeople(people, '', options);
+    assert.ok(matches.length > 1);
+    assert.ok(matches.every((person, index) => index === 0 || matches[index - 1].bruto <= person.bruto));
+  }
+});

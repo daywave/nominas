@@ -6,6 +6,7 @@ const results = $('#results');
 const status = $('#status');
 const dialog = $('#person-dialog');
 const area = $('#area');
+const order = $('#order');
 let group = 'all';
 const reset = $('#reset');
 const money = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
@@ -27,8 +28,7 @@ function element(tag, className, text) {
 
 function queryURL() {
   const url = new URL(location.href);
-  url.searchParams.delete('orden');
-  const values = { q: search.value.trim(), area: area.value, grupo: group === 'all' ? '' : group };
+  const values = { q: search.value.trim(), area: area.value, grupo: group === 'all' ? '' : group, orden: order.value === 'asc' ? 'menor' : '' };
   for (const [key, value] of Object.entries(values)) {
     if (value) url.searchParams.set(key, value);
     else url.searchParams.delete(key);
@@ -37,7 +37,12 @@ function queryURL() {
 }
 
 function readableName(value) {
-  return value.toLocaleLowerCase('es-MX').replace(/(^|[\s-])\p{L}/gu, letter => letter.toLocaleUpperCase('es-MX'));
+  const particles = new Set(['de', 'del', 'la', 'las', 'los', 'y']);
+  return value.trim().split(/\s+/).map((word, index) => {
+    const lower = word.toLocaleLowerCase('es-MX');
+    if (index > 0 && particles.has(lower)) return lower;
+    return lower.replace(/(^|-)\p{L}/gu, letter => letter.toLocaleUpperCase('es-MX'));
+  }).join(' ');
 }
 
 function readableLabel(value) {
@@ -62,7 +67,9 @@ function renderResults() {
   for (const person of shown) {
     const row = element('tr');
     const nameCell = element('td', 'name-cell');
-    const button = element('button', 'person-link', readableName(person.nombre));
+    const button = element('button', 'person-link');
+    button.append(element('span', 'name-line', readableName(person.nombres)), element('span', 'name-line', readableName(person.apellidos)));
+    button.title = readableName(person.nombre);
     button.type = 'button';
     button.setAttribute('aria-label', `Ver sueldo de ${person.nombre}`);
     button.addEventListener('click', () => openPerson(person, button));
@@ -86,8 +93,9 @@ function runSearch({ updateURL = true } = {}) {
   if (!ready) return;
   clearTimeout(searchTimer);
   page = 1;
-  matches = findPeople(people, search.value, { area: area.value, group });
-  reset.hidden = !search.value && !area.value && group === 'all';
+  matches = findPeople(people, search.value, { area: area.value, group, order: order.value });
+  reset.hidden = !search.value && !area.value && group === 'all' && order.value === 'desc';
+  $('.sort-note').textContent = `Ordenado por sueldo bruto, de ${order.value === 'asc' ? 'menor a mayor' : 'mayor a menor'} · MXN`;
   renderResults();
   if (updateURL) {
     const url = queryURL();
@@ -133,6 +141,7 @@ search.addEventListener('input', () => {
 });
 $('#search-form').addEventListener('submit', event => { event.preventDefault(); runSearch(); });
 area.addEventListener('change', () => runSearch());
+order.addEventListener('change', () => runSearch());
 function setGroup(value) {
   group = value;
   document.querySelectorAll('[data-group]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.group === group)));
@@ -142,6 +151,7 @@ for (const button of document.querySelectorAll('[data-group]')) {
 }
 reset.addEventListener('click', () => {
   search.value = area.value = '';
+  order.value = 'desc';
   setGroup('all');
   runSearch();
   search.focus();
@@ -182,6 +192,7 @@ function restoreLocation() {
   area.value = url.searchParams.get('area') || '';
   if (area.selectedIndex < 0) area.value = '';
   const requestedGroup = url.searchParams.get('grupo');
+  order.value = url.searchParams.get('orden') === 'menor' ? 'asc' : 'desc';
   setGroup(['professors', 'others'].includes(requestedGroup) ? requestedGroup : 'all');
   runSearch({ updateURL: false });
   const id = url.searchParams.get('persona');

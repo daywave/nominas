@@ -25,7 +25,7 @@ npm run preview
 
 ## Alcance
 
-Una búsqueda flexible por nombres, adscripciones y puestos, sin importar acentos, mayúsculas u orden de palabras. Filtros rápidos por profesores u otros puestos y selector de área. Todos los resultados se ordenan por sueldo bruto de mayor a menor. Tabla con diez personas por página, nombres destacados, bruto y neto visibles y ficha individual con enlace compartible.
+Una búsqueda flexible por nombres, adscripciones y puestos, sin importar acentos, mayúsculas u orden de palabras. Filtros rápidos por profesores u otros puestos y selector de área. Los resultados se ordenan por sueldo bruto de mayor a menor de forma predeterminada, con selector para cambiar a menor a mayor. Tabla con diez personas por página, nombres destacados en dos renglones, bruto y neto visibles y ficha individual con enlace compartible.
 
 Área y departamento comparten un filtro porque la fuente solo incluye un campo de adscripción. La búsqueda y los filtros se ejecutan en el navegador.
 

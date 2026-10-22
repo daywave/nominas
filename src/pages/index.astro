@@ -31,6 +31,7 @@ import "../styles/global.css";
       <div class="filters" aria-label="Filtros de resultados">
         <div class="quick-filters" role="group" aria-label="Tipo de puesto"><button class="filter-button" type="button" data-group="all" aria-pressed="true">Todos</button><button class="filter-button" type="button" data-group="professors" aria-pressed="false">Profesores</button><button class="filter-button" type="button" data-group="others" aria-pressed="false">Otros puestos</button></div>
         <label class="sr-only" for="area">Área o departamento</label><select id="area" disabled><option value="">Todas las áreas</option></select>
+        <label class="sr-only" for="order">Ordenar por sueldo bruto</label><select id="order"><option value="desc">Sueldo: mayor a menor</option><option value="asc">Sueldo: menor a mayor</option></select>
         <button id="reset" class="text-button" type="button" hidden>Limpiar</button>
       </div>
     </section>
