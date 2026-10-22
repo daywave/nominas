@@ -1,0 +1,16 @@
+import records from '../../../../data/2026/nominas.json';
+
+export function GET() {
+  const people = records.map(record => ({
+    id: record.id_empleado,
+    nombre: record.nombre_completo,
+    puesto: record.denominacion_cargo,
+    puesto_base: record.descripcion_puesto,
+    area: record.area_adscripcion,
+    bruto: record.remuneracion_bruta_mensual,
+    neto: record.remuneracion_neta_mensual,
+  }));
+  return new Response(JSON.stringify(people), {
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+  });
+}

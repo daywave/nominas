@@ -1,0 +1,132 @@
+:root {
+  --paper: #f3e8b5;
+  --ink: #202b3e;
+  --accent: #e9c85d;
+  --white: #fffef8;
+  --line: #202b3e;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  color: var(--ink);
+  background: var(--paper);
+  font-synthesis: none;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .45; }
+a { color: inherit; text-underline-offset: 4px; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+[hidden] { display: none !important; }
+.page { max-width: 1280px; padding: 0 48px; margin: auto; }
+.tape { position: relative; height: 36px; background: var(--ink); color: var(--paper); font: 700 11px/36px 'SFMono-Regular', Consolas, monospace; text-transform: uppercase; letter-spacing: 1.3px; overflow: hidden; white-space: nowrap; }
+.marquee-track { display: flex; width: max-content; animation: marquee 38s linear infinite; }
+.marquee-track span { flex-shrink: 0; padding-right: 24px; }
+.tape:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+.project-name { display: inline-block; margin-bottom: 20px; font-size: 19px; font-weight: 750; text-decoration: none; letter-spacing: -.4px; }
+.hero { padding: 38px 0 34px; }
+h1 { font: 900 clamp(72px, 10.7vw, 142px)/.94 Impact, 'Arial Narrow', 'Helvetica Neue', sans-serif; text-transform: uppercase; letter-spacing: -3px; margin: 0; max-width: 1000px; }
+.hero-bottom { display: flex; gap: 35px; align-items: center; margin-top: 30px; }
+.intro-copy { font-size: 16px; font-weight: 600; line-height: 1.65; max-width: 590px; margin: 0; }
+.search-section { padding: 3px 0 0; }
+.search-label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.4px; margin-bottom: 12px; }
+.search-box { display: flex; border: 3px solid var(--ink); background: var(--white); }
+input[type=search] { min-width: 0; width: 100%; color: var(--ink); border: 0; padding: 18px 20px; font-size: 17px; outline: none; border-radius: 0; background: transparent; }
+input[type=search]:focus-visible { outline: none; }
+.search-box:focus-within { outline: 2px solid var(--ink); outline-offset: 4px; }
+input::placeholder { color: #6e7276; opacity: 1; }
+.primary-button { color: var(--paper); background: var(--ink); border: 0; border-left: 3px solid var(--ink); padding: 10px 30px; min-width: 170px; font: 900 27px/1 Impact, 'Arial Narrow', sans-serif; text-transform: uppercase; }
+.primary-button:hover { color: white; }
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin-top: 13px; }
+.quick-filters { display: flex; flex-wrap: wrap; gap: 9px; }
+.filter-button, #area { min-height: 42px; border: 2px solid var(--ink); border-radius: 0; color: var(--ink); background: transparent; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.filter-button[aria-pressed=true] { background: var(--ink); color: var(--paper); }
+.filter-button:hover:not([aria-pressed=true]), #area:hover { background: #e5d99e; }
+#area { max-width: 245px; text-overflow: ellipsis; padding-right: 24px; cursor: pointer; }
+.text-button { color: inherit; background: transparent; border: 0; padding: 5px 0; font-size: 11px; text-decoration: underline; text-underline-offset: 4px; }
+.browse { margin-top: 32px; scroll-margin-top: 18px; }
+.table-scroll { overflow-x: auto; }
+.payroll-table { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 15px; text-align: left; border: 2px solid var(--ink); }
+.payroll-table th { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; background: var(--ink); color: var(--paper); padding: 16px 16px; font-size: 13px; font-weight: 600; letter-spacing: .2px; }
+.payroll-table th:nth-child(1) { width: 35%; }
+.payroll-table th:nth-child(2) { width: 22%; }
+.payroll-table th:nth-child(3) { width: 22%; }
+.payroll-table th:nth-child(4) { width: 21%; }
+.payroll-table td { border-bottom: 1px solid #202b3e40; padding: 18px 16px; background: var(--white); vertical-align: middle; overflow-wrap: break-word; line-height: 1.5; }
+.person-link { display: block; text-align: left; font: 900 24px/1.2 Impact, 'Arial Narrow', sans-serif; color: var(--ink); background: transparent; border: 0; padding: 3px 0; text-decoration: none; }
+.person-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.role-cell, .area-cell { font-size: 14px; color: #465063; }
+.payroll-table .salary-cell { background: #ecdc91; text-align: right; white-space: nowrap; overflow-wrap: normal; }
+.salary-heading { text-align: right; }
+.gross-value { display: block; font: 900 clamp(22px, 2.5vw, 31px)/1.1 Impact, 'Arial Narrow', sans-serif; font-variant-numeric: tabular-nums; }
+.salary-label-small { display: block; font-size: 10px; margin-top: 5px; text-transform: uppercase; }
+.net-value { display: block; font-size: 12px; font-weight: 700; margin-top: 0; font-variant-numeric: tabular-nums; }
+.sort-note { margin: 0 0 12px; font-size: 12px; color: #465063; }
+.payroll-table tr:hover td:not(.salary-cell) { background: #f8f4e5; }
+.empty-message h3 { font-size: 17px; margin: 8px 0; }
+.empty-message p { font-size: 13px; margin: 0 0 8px; font-weight: 400; }
+.results-footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 0; font-size: 11px; }
+#status { margin: 0; line-height: 1.6; }
+.pagination { display: flex; align-items: center; gap: 18px; white-space: nowrap; }
+.footer { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; border-top: 3px solid var(--ink); margin-top: 12px; padding: 20px 0 35px; font-size: 10px; font-weight: 600; line-height: 1.8; text-transform: uppercase; }
+.footer p { margin: 0; }
+.source-note { display: none; max-width: 850px; padding: 10px 0 35px; scroll-margin-top: 20px; }
+.source-note:target, .source-note.is-open { display: block; }
+.source-note h2 { font-size: 19px; }
+.source-note p { font-size: 13px; line-height: 1.8; }
+dialog { border: 3px solid var(--ink); border-radius: 0; padding: 26px 30px; width: min(680px, calc(100% - 32px)); max-height: calc(100dvh - 40px); background: var(--white); color: var(--ink); }
+dialog::backdrop { background: #172133bb; }
+.dialog-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.eyebrow { font-size: 11px; margin: 0; letter-spacing: 1px; }
+.close-button { border: 2px solid var(--ink); border-radius: 0; background: transparent; color: var(--ink); width: 40px; height: 40px; font-size: 18px; }
+.person-period { font-size: 11px; margin: 28px 0 15px; }
+#person-name { font-size: 27px; line-height: 1.2; letter-spacing: -.8px; margin: 0 0 18px; }
+.person-role, .person-area { font-size: 13px; line-height: 1.6; margin: 0 0 6px; }
+.salaries { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; padding: 24px 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); margin-top: 24px; }
+.salary-label { font-size: 11px; }
+.salaries strong { display: block; font-size: 30px; font-weight: 650; line-height: 1.2; margin-top: 12px; font-variant-numeric: tabular-nums; }
+.salaries p { font-size: 11px; margin-bottom: 0; }
+.currency-note, .zero-note { font-size: 11px; line-height: 1.7; }
+.zero-note { background: var(--paper); padding: 12px; }
+.person-source { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 24px; font-size: 11px; }
+.share-status { font-size: 12px; line-height: 1.6; min-height: 19px; }
+.share-status input { display: block; margin-top: 6px; width: 100%; }
+.source-reference { font-size: 11px; }
+.skip-link { position: absolute; top: -100px; left: 16px; background: var(--paper); color: var(--ink); padding: 12px; z-index: 10; }
+.skip-link:focus { top: 5px; }
+body:has(dialog[open]) { overflow: hidden; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (max-width: 900px) {
+  .page { padding: 0 28px; }
+  h1 { font-size: clamp(72px, 12vw, 110px); }
+  .intro-copy { font-size: 14px; }
+    .hero-bottom { gap: 25px; }
+  .payroll-table th, .payroll-table td { padding-left: 12px; padding-right: 12px; }
+  .payroll-table { min-width: 840px; }
+  .footer { flex-direction: column; gap: 12px; }
+}
+@media (max-width: 560px) {
+  .page { padding: 0 18px; }
+  .tape { height: 32px; font-size: 10px; line-height: 32px; }
+  .project-name { margin-bottom: 16px; font-size: 17px; }
+  .hero { padding: 28px 0; }
+  h1 { font-size: clamp(46px, 12vw, 66px); letter-spacing: -1.5px; }
+  .hero-bottom { margin-top: 22px; gap: 18px; align-items: flex-start; flex-direction: column; }
+  .intro-copy { font-size: 13px; line-height: 1.7; }
+      .search-label { font-size: 11px; }
+  input[type=search] { padding: 15px 10px; font-size: 16px; }
+  .primary-button { padding: 10px; min-width: 93px; font-size: 21px; }
+  .filter-button, #area { font-size: 10px; padding: 10px; }
+  #area { max-width: 100%; width: 100%; }
+  .browse { margin-top: 25px; }
+  .results-footer { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .pagination { width: 100%; justify-content: space-between; }
+  dialog { padding: 20px; }
+  #person-name { font-size: 23px; }
+  .salaries { gap: 14px; }
+  .salary-label { font-size: 10px; }
+  .salaries strong { font-size: 26px; }
+  .person-source { flex-direction: column; align-items: flex-start; }
+}
