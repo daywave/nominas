@@ -10,7 +10,7 @@ const order = $('#order');
 let group = 'all';
 const reset = $('#reset');
 const money = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 15;
 let people = [];
 let matches = [];
 let page = 1;
@@ -184,7 +184,6 @@ $('#share-person').addEventListener('click', async () => {
     input.select();
   }
 });
-$('#dialog-source').addEventListener('click', () => { dialog.close(); $('#fuente').classList.add('is-open'); });
 
 function restoreLocation() {
   const url = new URL(location.href);
