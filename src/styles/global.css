@@ -32,6 +32,8 @@ input:focus-visible, select:focus-visible { background-color: #f6ecdf; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
 .project-name { display: inline-block; margin-bottom: 20px; font-size: 19px; font-weight: 750; text-decoration: none; letter-spacing: -.4px; }
+.hero .project-name { margin-top: 0; max-width: 100%; overflow-wrap: anywhere; }
+.university-back { display: block; width: fit-content; font-size: 12px; margin: -6px 0 24px; }
 .hero { padding: 38px 0 34px; }
 h1 { font: 900 clamp(72px, 10.7vw, 142px)/.94 Impact, 'Arial Narrow', 'Helvetica Neue', sans-serif; text-transform: uppercase; letter-spacing: -3px; margin: 0; max-width: 1000px; }
 .headline-accent { color: var(--accent-ink); }
@@ -93,8 +95,7 @@ dialog::backdrop { background: #242321bb; }
 .salary-label { font-size: 11px; }
 .salaries strong { display: block; font-size: 30px; font-weight: 650; line-height: 1.2; margin-top: 12px; font-variant-numeric: tabular-nums; }
 .salaries p { font-size: 11px; margin-bottom: 0; }
-.currency-note, .zero-note { font-size: 11px; line-height: 1.7; }
-.zero-note { background: var(--paper); padding: 12px; }
+.currency-note { font-size: 11px; line-height: 1.7; }
 .person-source { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 24px; font-size: 11px; }
 .share-status { font-size: 12px; line-height: 1.6; min-height: 19px; }
 .share-status input { display: block; margin-top: 6px; width: 100%; }

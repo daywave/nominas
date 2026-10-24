@@ -1,6 +1,6 @@
 # ¿Cuánto gana mi profe?
 
-An independent portal for finding the reported remuneration of professors and staff at public universities in Mexico. Help people find a person, read their reported pay, and share the result. The website currently covers UAA; preparing other institutions does not make them available on the website.
+An independent portal for finding the reported remuneration of professors and staff at public universities in Mexico. Help people find a person, read their reported pay, and share the result. Available universities are discovered from the prepared data in the repository.
 
 The site uses Astro, CSS, and browser JavaScript. It is static: search, filters, pagination, and individual records run in the browser. Data preparation is a separate, manually executed local tool.
 
@@ -35,12 +35,16 @@ npm run build
 npm run preview
 ```
 
-The build writes a static site to `dist/`. It currently reads the prototype dataset at `data/2026/nominas.json` through `src/pages/data/2026/buscador.json.js`. That dataset has not been validated as a replacement for the original downloads. Pipeline candidates do not replace it automatically.
+The build writes a static site to `dist/`. It discovers `data/processed/<institution>/<year>/nomina.json` and generates a small catalog plus one search JSON for each institution's latest available year. It does not run the preparation pipeline. Blocked or inconsistent latest datasets fail the build instead of falling back to older data.
+
+`/` is the searchable university directory. `/nomina/?university=<id>` is one shared payroll page: it loads the catalog and only the selected university's search JSON. Institution names, reporting periods, and source update dates come from those files. There are no university-specific HTML pages, year selectors, or historical person profiles yet. Shared searches and record links retain the university parameter.
+
+Record links identify a source file hash and row, not a permanent employee ID. Replacing a source invalidates old row links rather than pointing them to another person. The former prototype dataset is no longer read by the application.
 
 ## Contribute
 
 1. Read the project guidance and the document for your task above.
-2. For data work, follow the pipeline guide before adding downloads or changing preparation rules. Raw downloads and pipeline artifacts stay local. Prepared website data will be versioned as described in [DEPLOYMENT.md](DEPLOYMENT.md); its promotion step is not implemented yet.
+2. For data work, follow the pipeline guide before adding downloads or changing preparation rules. Include the prepared records from `data/processed/` in the data contribution. Raw downloads and preparation reports stay local. See [DEPLOYMENT.md](DEPLOYMENT.md) for data distribution decisions.
 3. Keep a change focused. Explain what it changes, why, and how you verified it in your pull request.
 4. Follow the validation requirements in [AGENTS.md](AGENTS.md).
 
@@ -48,11 +52,15 @@ Report issues or submit pull requests in [the repository](https://github.com/seb
 
 ## Code map
 
-- `src/pages/index.astro`: search page and individual record dialog.
+- `src/pages/index.astro`: discovers universities and renders the directory page.
+- `src/components/UniversityDirectory.astro`: directory composition, search behavior, and styles, separate from the payroll page.
+- `src/pages/nomina.astro`: shared payroll page and individual record dialog.
+- `src/layouts/Page.astro`: shared document, banner, and footer.
 - `src/components/Footer.astro`: footer and its styles.
 - `src/styles/global.css`: shared visual styles and responsive layout.
 - `src/scripts/search.js`: browser interaction and shareable URLs.
 - `src/scripts/search-utils.js`: search and filtering helpers.
-- `src/pages/data/2026/buscador.json.js`: build-time generation of the static search dataset.
+- `src/lib/payroll.js`: build-time discovery and browser-data projection.
+- `src/pages/data/`: build-time generation of the catalog and institution search files.
 - `scripts/nominas/`: local data preparation tool and its guide.
 - `tests/`: behavior tests using Node's built-in test runner.

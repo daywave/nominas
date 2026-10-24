@@ -9,7 +9,7 @@ Read [project guidance](../../AGENTS.md) for data fidelity, MXN policy, and huma
 1. Obtain an untouched JSON download from the [Plataforma Nacional de Transparencia](https://consultapublicamx.plataformadetransparencia.org.mx). Choose one reporting period for one institution and year.
 2. Create `data/raw/<institution>/<year>/` and place the download inside. The institution identifier must start with a letter or number and contain only ASCII letters, numbers, hyphens, or underscores. The year must contain four digits.
 3. From the repository root, run either command below. Replace `<institution>` with the folder name.
-4. Read the generated report and compare the extracted records with the original. Never edit generated records by hand.
+4. Read the generated report and compare the extracted records with the original. Include the prepared JSON from `data/processed/` in your pull request. Never edit generated records by hand.
 
 ```sh
 npm run nominas:prepare -- --university <institution>
@@ -25,12 +25,12 @@ Paths are relative to the repository root; angle-bracket names are placeholders.
 ```text
 data/raw/<institution>/<year>/<download>.json
 
-data/candidates/<institution>/<year>/nomina.json
+data/processed/<institution>/<year>/nomina.json
 data/reports/<institution>/<year>/revision.json
 data/reports/<institution>/<year>/revision.md
 ```
 
-Original downloads and pipeline outputs stay local and are ignored by Git. `.gitkeep` preserves the input root. Code, documentation, and synthetic tests are versioned. Approved website data will be stored in the repository through a separate promotion step, which is not implemented yet; see [deployment decisions](../../DEPLOYMENT.md). Ignoring paths does not remove files already tracked by Git.
+Prepared JSON files in `data/processed/` are versioned in Git alongside code, documentation, and synthetic tests. The script writes them directly; no manual copy or separate promotion command is needed. Original downloads and preparation reports stay local and are ignored by Git. `.gitkeep` preserves the input root. See [deployment decisions](../../DEPLOYMENT.md) for how prepared data will reach the website. Ignoring paths does not remove files already tracked by Git.
 
 ## Identity and reporting period
 
@@ -48,7 +48,7 @@ Institution identifiers and year folders are discovered relative to the project,
 2. Validate the JSON container, nonempty published institution name, required unique headers, and row lengths. Match headers after normalizing case, accents, and whitespace; additional columns cannot shift extracted values.
 3. Enforce the year and single-period rules above before extracting records.
 4. Standardize supported formats and preserve rows, recording internal findings.
-5. Export a candidate, a readable Markdown report, and a detailed JSON report separately from website data.
+5. Export prepared records to `data/processed/` and local Markdown/JSON reports to `data/reports/`. The next website build discovers the latest year for each institution; running preparation alone does not deploy anything.
 
 Supported conversions trim outer text whitespace; convert valid `DD/MM/YYYY`, `YYYY-MM-DD`, or `YYYY-MM-DD 00:00:00` dates to ISO; and convert unambiguous decimal amounts to JavaScript numbers without rounding to cents. Missing or unsupported cells become `null`, never zero, and remain traceable to the original. Invalid reporting dates block the input; an unsupported source update date is an internal finding.
 
@@ -98,7 +98,7 @@ Check counts, dates, periods, and extracted fields against the original. Finding
 
 ## Contribute changes
 
-Add a supported institution through directories alone. If its format is unsupported, investigate before changing extraction: document an approved reusable mapping or format rule and add a focused regression test. Do not guess column matches or patch outputs manually. The prototype dataset is not a correction source, and candidates do not replace website data automatically.
+Add a supported institution through directories alone, prepare it, include its processed output in Git, and rebuild the website. The catalog is generated automatically; no institution registry is needed. If its format is unsupported, investigate before changing extraction: document an approved reusable mapping or format rule and add a focused regression test. Do not guess column matches or patch outputs manually. The prototype dataset is not a correction source.
 
 ```sh
 node --test tests/nominas.test.js

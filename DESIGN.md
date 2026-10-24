@@ -6,7 +6,7 @@ Start with the [README](README.md) for contribution instructions and [AGENTS.md]
 
 Keep an editorial, youthful, direct presentation: a public-information strip, poster headline, brief description, wide search field, compact filters, results table, and footer. Avoid excessive decoration.
 
-The brand is **¿Cuánto gana mi profe?**. **Nómina UAA** identifies the current institution above the question and will vary with institution coverage. The top marquee repeats “Información pública”, without the project name or a pause button, and respects reduced-motion preferences.
+The brand is **¿Cuánto gana mi profe?**. **Nómina [university name]** identifies the selected institution above the question and in the document title. All institution names, reporting periods, and update dates come from the selected dataset. The top marquee repeats “Información pública”, without the project name or a pause button, and respects reduced-motion preferences.
 
 ## Palette
 
@@ -24,15 +24,17 @@ Mustard accents the marquee, search action, salary column, footer statement, and
 
 ## Typography and composition
 
+The university directory has its own composition in `UniversityDirectory.astro`: a public archive with an editorial intervention. Use a compact brand masthead, oversized cropped “PÚBLICO” typography, one mustard consultation stamp, a brief italic annotation, and numbered university rows. Keep search visible early on mobile. The directory footer uses only the project closing; payroll definitions belong on the payroll page. This direction does not change the payroll table's visual rules below.
+
 - Use a heavy condensed uppercase headline. Controls, column headings, and general body text use monospace. Georgia is reserved for editorial accents, including the introduction, dictionary terms, and footer statement. Table text uses sans serif, with condensed gross amounts. Do not add external font downloads.
-- Use straight borders, simple blocks, and clear rules. Avoid shadows, gradients, stickers, decorative arrows, illustrations, and extra elements competing with search.
+- Use straight borders, simple blocks, and clear rules. Avoid shadows, gradients, decorative arrows, and extra elements competing with search. The directory's single consultation stamp is the approved decorative exception; do not add stickers to the payroll interface.
 - On desktop, show name, position, area/department, and monthly pay. Give names priority: 22px sans serif, weight 700, line-height 1.3. The current interface splits published given names and surnames into two lines; preserve source accents and display interior name particles in lowercase. The full name remains available through the record details and accessible labeling.
 - Position and area use bold centered sans serif. Gross pay is large and condensed, followed closely by its label and bold net pay. Open details from the name.
 - At widths up to 700px, compact each row into information on the left and pay on the right, with corresponding headings. Preserve the light information background, mustard salary background, outer border, and row separators. Keep name and pay together without horizontal scrolling or duplicated rendering.
 
 ## Current interface behavior
 
-The introduction reads: “Sueldos de profesores y funcionarios de la UAA. Se pagan con dinero público, así que se leen con ojos públicos.” User-facing text stays in Spanish.
+The introduction reads: “Sueldos de profesores y funcionarios. Se pagan con dinero público, así que se leen con ojos públicos.” User-facing text stays in Spanish.
 
 Search accepts names, positions, and areas. Default order is gross pay descending; a compact selector allows ascending order and retains the choice when searching, filtering, or sharing. Filters are Todos, Profesores, Otros puestos, and area. Show fifteen records per page; records are not verified unique people.
 
@@ -40,6 +42,6 @@ The current teacher filter matches source position descriptions beginning with P
 
 ## Footer
 
-Use four dictionary-style definitions: nómina, fuente, bruto, and neto. Show one row on desktop and two columns on mobile, with compact mobile text and dotted dividers. Keep independence and source update information outside the dictionary.
+Use four dictionary-style definitions: nómina, fuente, bruto, and neto. Show one row on desktop and two columns on mobile, with compact mobile text and dotted dividers. Keep the independence statement outside the dictionary. Source update dates appear in individual record details, not in the footer.
 
-Link the source directly to the Plataforma Nacional de Transparencia and the open-source seal to the repository. Place the editorial statement and project information in the dark final section, with the open-source link vertically centered alongside the text on desktop. Avoid ASCII drawings, expandable source sections, and data download controls.
+Link the source directly to the Plataforma Nacional de Transparencia and the open-source seal to the repository. Place the editorial statement and project information in the dark final section, with the open-source link vertically centered alongside the text on desktop. Center the GitHub profile links in a wrapping row at the bottom. Avoid ASCII drawings, expandable source sections, and data download controls.

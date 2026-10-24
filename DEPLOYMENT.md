@@ -5,7 +5,7 @@ This document owns hosting, data distribution, performance, and audience measure
 ## Agreed approach
 
 - Host the static Astro build on Cloudflare Pages, using the maintainer's existing Cloudflare domain. No runtime backend is required.
-- Store prepared data used by the website in the repository. This keeps contributions and builds straightforward without adding a bucket or release-download workflow. Original downloads and preparation reports remain local; candidates are not published automatically.
+- Store prepared data in `data/processed/` in the repository. The pipeline writes it directly so contributors do not need a manual transfer step. This keeps contributions and builds straightforward without adding a bucket or release-download workflow. Original downloads and preparation reports remain local; prepared records are not published automatically.
 - Generate a separate static search dataset for each university and year. A visitor should load only the selected university/year, with only the fields needed by the interface. Keep full preparation artifacts out of browser downloads.
 - Use Cloudflare's HTTP response compression, with supported algorithms negotiated by the browser. Do not add application-level decompression libraries or require contributors to maintain compressed source copies.
 - Use browser and CDN caching to avoid unnecessary repeat downloads. Data updates must become visible without serving outdated data indefinitely; the exact cache policy remains to be implemented and verified.
@@ -15,9 +15,7 @@ Compression reduces transfer size, not the original files stored in Git or the a
 
 ## Implementation status
 
-These are approved decisions, not a record of a completed deployment. The current website still uses its UAA prototype dataset. Multi-university data integration, promotion of prepared data into the repository, domain configuration, analytics activation, and cache/compression verification remain pending. No account configuration or deployment was performed when documenting these decisions.
-
-The current `.gitignore` still excludes pipeline candidates and reports. The data promotion step must make the approved website data available in Git and align contribution instructions with its chosen location; raw downloads must remain excluded.
+The pipeline exports prepared data into a directory included in Git. The static build discovers the latest institutional datasets and generates a university directory, a single shared payroll HTML page, and separate search files. Domain configuration, analytics activation, and deployed cache/compression verification remain pending. No account configuration or deployment has been performed.
 
 ## Verify before launch
 

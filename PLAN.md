@@ -22,14 +22,14 @@ The initial launch will include the twelve institutions whose downloads have bee
 
 Hosting, repository data storage, compression, caching, and audience measurement decisions are documented in [DEPLOYMENT.md](DEPLOYMENT.md). Initial dataset sizes have been measured. Implementation, deployment, and mobile performance verification remain pending.
 
-### 5. Establish multi-institution navigation — Pending
+### 5. Establish multi-institution navigation — Implemented
 
-Decide how people find their institution, move from a shared link to another institution, and share direct institution links. Institution pages and a directory have been discussed; final navigation is not implemented. Keep finding a person as the main action.
+The root directory lists universities discovered at build time. A single shared payroll page selects a university through the URL, loads only its latest dataset, and links back to the directory. There are no university-specific HTML pages or year controls. Historical information in person profiles remains future scope. See the [README](README.md) for routes and data flow.
 
-### 6. Expand available data — Pending
+### 6. Expand available data — Initial datasets connected
 
-Add official datasets within the approved scope, using the documented preparation workflow. Preparing a candidate does not make it available on the website.
+The twelve prepared institutional datasets are connected to the static build. Further additions use the documented preparation workflow and rebuild the catalog automatically. Deployment remains pending.
 
 ## How to proceed
 
-Follow the phase order. Humans decide scope, priorities, and work allocation. Do not treat later-phase proposals as approved features. Current work is in phase 4; infrastructure decisions do not mean the multi-institution website is ready to deploy.
+Humans decide scope, priorities, and work allocation. Do not treat later-phase proposals as approved features. Local multi-institution integration is implemented; phase 4 deployment and production performance verification remain pending.

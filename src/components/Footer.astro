@@ -1,5 +1,9 @@
+---
+const { showDefinitions = true } = Astro.props;
+const githubProfiles = ['sebhdz', 'mrbanana55', 'zahidzta', 'tafoya004', 'JESSISZ'];
+---
 <footer class="footer" aria-label="Sobre el proyecto">
-  <div class="page">
+  {showDefinitions && <div class="page">
     <div class="footer-definitions">
   <dl class="footer-dictionary">
     <div>
@@ -20,16 +24,18 @@
     </div>
   </dl>
     </div>
-  </div>
+  </div>}
   <div class="footer-closing">
   <div class="footer-bottom page">
     <div class="footer-about">
       <p class="footer-motto">Los datos públicos son hechos para leerse.</p>
       <p class="footer-independence">Proyecto independiente, sin afiliación con ninguna institución.<br>La transparencia no es un favor.</p>
-      <p class="footer-meta">Última actualización: <time datetime="2026-07-02">2 de julio de 2026</time></p>
     </div>
     <a class="code-stamp" href="https://github.com/sebhdz/nominas-uaa" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">&lt;/&gt;</span><span>Código abierto<small>Ver en GitHub</small></span></a>
   </div>
+  <nav class="footer-profiles page" aria-label="Perfiles de GitHub">
+    {githubProfiles.map((username) => <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer">@{username}</a>)}
+  </nav>
   </div>
 </footer>
 
@@ -48,7 +54,9 @@
 .footer-about { max-width: 600px; }
 .footer-motto { margin: 0 0 12px; font: italic 22px/1.4 Georgia, serif; color: var(--accent); }
 .footer-independence { margin: 0; font-size: 12px; line-height: 1.8; }
-.footer-meta { margin: 14px 0 0; font-size: 11px; line-height: 1.8; color: #d9d2c7; }
+.footer-profiles { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 24px; padding-bottom: 24px; text-align: center; font-size: 11px; }
+.footer-profiles a { display: inline-flex; align-items: center; min-height: 44px; color: var(--paper); }
+.footer-profiles a:hover { color: var(--accent); }
 .code-stamp { display: inline-flex; align-items: center; gap: 12px; justify-self: end; border: 2px solid var(--accent); background: var(--ink); color: var(--accent); padding: 8px 13px; text-decoration: none; font-size: 11px; font-weight: 700; text-transform: uppercase; line-height: 1.6; }
 .code-stamp > span:first-child { font-family: monospace; font-size: 23px; }
 .code-stamp small { display: block; font-size: 10px; font-weight: 400; text-transform: none; }

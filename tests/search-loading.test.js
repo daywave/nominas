@@ -11,11 +11,14 @@ class Control {
   listeners = {};
   selectedIndex = 0;
   dataset = {};
+  open = false;
   append(...children) { this.children.push(...children); }
   replaceChildren(...children) { this.children = children; }
   setAttribute(name, value) { this.attributes[name] = value; }
   addEventListener(name, handler) { this.listeners[name] = handler; }
-  dispatch(name) { this.listeners[name]({ preventDefault() {} }); }
+  dispatch(name) { return this.listeners[name]({ preventDefault() {} }); }
+  showModal() { this.open = true; }
+  close() { this.open = false; }
   get firstElementChild() { return this.children[0]; }
 }
 
@@ -34,19 +37,28 @@ test('conserva búsqueda, filtros y enlace si se editan antes de terminar la des
       else delete globalThis[name];
     }
   });
-  const location = { href: 'http://localhost/?q=Delia&area=COMUNICACION&orden=menor&persona=1' };
+  const location = { href: 'http://localhost/nomina/?university=prueba&q=Delia&area=COMUNICACION&orden=menor&persona=1' };
+  const requests = [];
   let finishDownload;
   const downloaded = new Promise(resolve => { finishDownload = resolve; });
   Object.assign(globalThis, {
     document: { querySelector: control, querySelectorAll: () => groups, createElement: () => new Control() },
     window: { addEventListener() {} },
     location,
-    history: { replaceState(_state, _title, url) { location.href = String(url); } },
-    fetch: async () => {
+    history: {
+      replaceState(_state, _title, url) { location.href = String(url); },
+      pushState(_state, _title, url) { location.href = String(url); },
+    },
+    fetch: async (url) => {
+      requests.push(url);
       await downloaded;
+      if (url === '/data/universities.json') return { ok: true, json: async () => [
+        { id: 'prueba', name: 'Universidad de prueba', period: { inicio: '2026-04-01', fin: '2026-06-30' }, updates: ['2026-07-02'], url: '/data/prueba/2026.json' },
+        { id: 'otra', url: '/data/otra/2026.json' },
+      ] };
       return { ok: true, json: async () => [
         { id: 1, nombre: 'DELIA ALMEIDA', nombres: 'DELIA', apellidos: 'ALMEIDA', puesto: 'JEFA', area: 'COMUNICACION', bruto: 200, neto: 100 },
-        { id: 2, nombre: 'ANDRES GURROLA', nombres: 'ANDRES', apellidos: 'GURROLA', puesto: 'DISEÑADOR', area: 'COMUNICACION', bruto: 300, neto: 200 },
+        { id: 2, nombre: 'ANDRES GURROLA', nombres: 'ANDRES', apellidos: 'GURROLA', puesto: 'DISEÑADOR', area: 'COMUNICACION', bruto: 300, neto: 200, actualizacion: '2026-07-02' },
       ] };
     },
   });
@@ -74,4 +86,22 @@ test('conserva búsqueda, filtros y enlace si se editan antes de terminar la des
   assert.equal(url.searchParams.get('grupo'), 'others');
   assert.equal(url.searchParams.has('persona'), false);
   assert.equal(url.searchParams.has('orden'), false);
+  assert.equal(url.searchParams.get('university'), 'prueba');
+  assert.deepEqual(requests, ['/data/universities.json', '/data/prueba/2026.json']);
+  assert.equal(control('#university-name').textContent, 'Nómina Universidad de prueba');
+  control('#results').children[0].children[0].children[0].dispatch('click');
+  assert.equal(new URL(location.href).searchParams.get('university'), 'prueba');
+  assert.equal(new URL(location.href).searchParams.get('persona'), '2');
+  assert.match(control('#person-period').textContent, /Universidad de prueba/);
+  assert.match(control('#person-source-date').textContent, /2 de julio de 2026/);
+
+  // An unknown identifier must not silently load another university's payroll.
+  location.href = 'http://localhost/nomina/?university=unknown';
+  requests.length = 0;
+  await import('../src/scripts/search.js?unknown-university');
+  await setImmediate();
+  assert.deepEqual(requests, ['/data/universities.json']);
+  assert.equal(control('#payroll-search').hidden, true);
+  assert.match(control('#university-error').textContent, /no está disponible/);
+  assert.equal(control('#university-error').hidden, false);
 });

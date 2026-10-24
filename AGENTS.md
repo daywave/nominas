@@ -4,7 +4,7 @@ Start with the [README](README.md) for setup and contribution instructions. This
 
 ## Purpose
 
-**¿Cuánto gana mi profe?** is an independent portal for viewing the reported remuneration of professors and staff at public universities in Mexico. The current implementation covers the UAA; broader coverage is a product direction, not a claim about the data already available.
+**¿Cuánto gana mi profe?** is an independent portal for viewing the reported remuneration of professors and staff at public universities in Mexico. Actual coverage is determined by the prepared datasets included in the repository; do not imply complete national coverage.
 
 The central question is simple: **How much does my professor earn?** Help people find a person, understand their reported pay, and share that information.
 

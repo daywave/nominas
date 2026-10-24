@@ -37,12 +37,12 @@ export async function prepareYear(id, year, root = projectRoot) {
     output.identificadorInstitucion = id;
     output.anio = year;
   }
-  const candidates = path.join(root, 'data/candidates', id, year);
+  const processed = path.join(root, 'data/processed', id, year);
   const reports = path.join(root, 'data/reports', id, year);
-  await mkdir(candidates, { recursive: true });
+  await mkdir(processed, { recursive: true });
   await mkdir(reports, { recursive: true });
   // A failed run replaces any previous candidate with an empty blocked result.
-  await writeFile(path.join(candidates, 'nomina.json'), JSON.stringify(result.candidato, null, 2) + '\n');
+  await writeFile(path.join(processed, 'nomina.json'), JSON.stringify(result.candidato, null, 2) + '\n');
   await writeFile(path.join(reports, 'revision.json'), JSON.stringify(result.reporte, null, 2) + '\n');
   await writeFile(path.join(reports, 'revision.md'), reportMarkdown(result.reporte));
   return result.reporte;

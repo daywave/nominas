@@ -1,0 +1,105 @@
+---
+const { universities } = Astro.props;
+---
+<main class="page directory-page">
+  <header class="directory-masthead">
+    <h1>¿Cuánto gana mi profe?</h1>
+    <p>Archivo de nóminas<br>Universidades públicas · México</p>
+  </header>
+
+  <section class="directory-cover" aria-label="El dinero público se lee con ojos públicos">
+    <div class="cover-label"><span>De acceso público</span><span aria-hidden="true">Para leerse de cerca</span></div>
+    <div class="cover-art" aria-hidden="true"><span>PÚBLICO</span></div>
+    <div class="cover-notes">
+      <p>La transparencia no es un favor.</p>
+      <span class="consultation-stamp">Consulta<br>abierta</span>
+    </div>
+  </section>
+
+  <section class="directory-search" aria-labelledby="directory-heading">
+    <div class="directory-search-heading">
+      <h2 id="directory-heading">Encuentra tu universidad.</h2>
+      <p>Busca la institución. Después, a tu profe.</p>
+    </div>
+    <label class="search-label" for="search">Nombre o siglas de la universidad</label>
+    <div class="search-box"><input id="search" type="search" placeholder="Escribe aquí…" autocomplete="off" aria-controls="university-list"></div>
+    <div class="directory-index-heading"><span>Índice de instituciones</span><p id="university-count" role="status" aria-live="polite">{universities.length} instituciones disponibles</p></div>
+    <ul id="university-list" class="university-list">
+      {universities.map((university, index) => <li data-search={`${university.id} ${university.name}`}>
+        <a href={`/nomina/?university=${encodeURIComponent(university.id)}`}>
+          <span class="entry-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+          <strong>{university.id.toUpperCase()}</strong>
+          <span class="entry-name">{university.name}</span>
+          <small>Nómina {university.year}</small>
+        </a>
+      </li>)}
+    </ul>
+    <p id="directory-empty" hidden>No encontramos esa universidad entre las disponibles.</p>
+  </section>
+</main>
+<script>
+  import { normalize } from '../scripts/search-utils.js';
+  const search = document.querySelector<HTMLInputElement>('#search');
+  const items = [...document.querySelectorAll<HTMLElement>('#university-list li')];
+  search?.addEventListener('input', () => {
+    const terms = normalize(search.value).split(/\s+/).filter(Boolean);
+    for (const item of items) item.hidden = !terms.every((term) => normalize(item.dataset.search).includes(term));
+    const count = items.filter((item) => !item.hidden).length;
+    document.querySelector('#university-count')!.textContent = `${count} instituciones disponibles`;
+    (document.querySelector('#directory-empty') as HTMLElement).hidden = count > 0;
+  });
+</script>
+<style>
+.directory-page { padding-bottom: 48px; }
+.directory-masthead { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 28px 0 22px; border-bottom: 2px solid var(--ink); }
+.directory-masthead h1 { font: bold 28px/1.15 Georgia, serif; letter-spacing: -1px; text-transform: none; }
+.directory-masthead > p { margin: 0; font-size: 10px; line-height: 1.7; text-transform: uppercase; text-align: right; letter-spacing: .5px; }
+.directory-cover { padding: 22px 0 30px; }
+.cover-label { display: flex; justify-content: space-between; gap: 16px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; }
+.cover-art { overflow: hidden; padding-top: 12px; }
+.cover-art > span { display: block; width: fit-content; font: 900 clamp(76px, 23vw, 290px)/.94 Impact, 'Arial Narrow', 'Helvetica Neue', sans-serif; letter-spacing: .005em; transform: translateX(-.015em); }
+.cover-notes { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-top: 8px; }
+.cover-notes > p { margin: 0; font: italic 24px/1.4 Georgia, serif; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 4px; text-underline-offset: 6px; }
+.consultation-stamp { flex-shrink: 0; margin: 0 5px; padding: 10px 20px; background: var(--accent); border: 2px solid var(--ink); outline: 1px solid var(--ink); outline-offset: -6px; font-size: 14px; font-weight: 700; line-height: 1.1; letter-spacing: 1px; text-transform: uppercase; text-align: center; transform: rotate(-6deg); }
+.directory-search { border-top: 2px solid var(--ink); padding-top: 26px; }
+.directory-search-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.directory-search-heading h2 { font: bold 28px/1.2 Georgia, serif; margin: 0; letter-spacing: -.6px; }
+.directory-search-heading p { margin: 0; font-size: 11px; line-height: 1.6; }
+.directory-index-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 28px; padding-bottom: 12px; font-size: 10px; }
+.directory-index-heading > span { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.directory-index-heading p { margin: 0; text-align: right; }
+.university-list { margin: 0; padding: 0; list-style: none; border-top: 2px solid var(--ink); }
+.university-list li { border-bottom: 1px dotted var(--divider-strong); }
+.university-list a { display: grid; grid-template-columns: 30px 90px minmax(0, 1fr) auto; align-items: center; gap: 20px; padding: 22px 10px; text-decoration: none; }
+.university-list a:hover { background: var(--white); }
+.entry-number { font-size: 10px; color: #625c52; align-self: start; padding-top: 5px; }
+.university-list strong { font: 900 28px/1 Impact, 'Arial Narrow', sans-serif; letter-spacing: .4px; }
+.entry-name { font: 600 16px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow-wrap: anywhere; }
+.university-list small { font-size: 10px; white-space: nowrap; }
+@media (max-width: 700px) {
+  .directory-search-heading { flex-direction: column; gap: 8px; }
+  .university-list a { gap: 12px; grid-template-columns: 24px 65px minmax(0, 1fr); }
+  .university-list small { grid-column: 3; }
+  .entry-number { grid-row: span 2; }
+  .university-list strong { grid-row: span 2; align-self: start; }
+}
+@media (max-width: 560px) {
+  .directory-masthead { padding: 22px 0 18px; align-items: flex-start; gap: 16px; }
+  .directory-masthead h1 { max-width: 165px; font-size: 22px; line-height: 1.1; }
+  .directory-masthead > p { font-size: 8px; letter-spacing: 0; }
+  .directory-cover { padding: 16px 0 24px; }
+  .cover-label { font-size: 8px; letter-spacing: .7px; }
+  .cover-art { padding-top: 10px; }
+  .cover-notes { padding-top: 12px; gap: 18px; }
+  .cover-notes > p { max-width: 200px; font-size: 17px; text-decoration-thickness: 3px; text-underline-offset: 4px; }
+  .consultation-stamp { font-size: 10px; padding: 9px 12px; }
+  .directory-search { padding-top: 22px; }
+  .directory-search-heading { margin-bottom: 18px; }
+  .directory-search-heading h2 { font-size: 25px; }
+  .directory-search-heading p { font-size: 10px; }
+  .directory-index-heading { font-size: 9px; margin-top: 22px; }
+  .university-list a { padding: 18px 0; }
+  .university-list strong { font-size: 24px; }
+  .entry-name { font-size: 13px; }
+}
+</style>

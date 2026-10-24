@@ -15,5 +15,9 @@ export function findPeople(records, query, { area = '', group = 'all', order = '
     if (group === 'others' && isProfessor(person)) return false;
     const text = normalize(`${person.nombre} ${person.area} ${person.puesto} ${person.puesto_base || ''}`);
     return terms.every(term => text.includes(term));
-  }).sort((a, b) => (order === 'asc' ? a.bruto - b.bruto : b.bruto - a.bruto) || a.nombre.localeCompare(b.nombre, 'es'));
+  }).sort((a, b) => {
+    if (a.bruto === null && b.bruto !== null) return 1;
+    if (b.bruto === null && a.bruto !== null) return -1;
+    return (order === 'asc' ? a.bruto - b.bruto : b.bruto - a.bruto) || a.nombre.localeCompare(b.nombre, 'es');
+  });
 }

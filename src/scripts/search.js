@@ -19,6 +19,10 @@ let ready = false;
 let searchTimer;
 let lastTrigger = null;
 let pendingArea = '';
+let university;
+const formatMoney = value => Number.isFinite(value) ? money.format(value) : 'Sin dato';
+const formatDate = value => value ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${value}T00:00:00Z`)) : 'Sin fecha';
+const formatPeriod = period => `${formatDate(period.inicio)} – ${formatDate(period.fin)}`;
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -39,7 +43,7 @@ function queryURL() {
 
 function readableName(value) {
   const particles = new Set(['de', 'del', 'la', 'las', 'los', 'y']);
-  return value.trim().split(/\s+/).map((word, index) => {
+  return (value || '').trim().split(/\s+/).map((word, index) => {
     const lower = word.toLocaleLowerCase('es-MX');
     if (index > 0 && particles.has(lower)) return lower;
     return lower.replace(/(^|-)\p{L}/gu, letter => letter.toLocaleUpperCase('es-MX'));
@@ -47,6 +51,7 @@ function readableName(value) {
 }
 
 function readableLabel(value) {
+  if (!value) return 'Sin dato';
   const text = value.toLocaleLowerCase('es-MX');
   return text.charAt(0).toLocaleUpperCase('es-MX') + text.slice(1);
 }
@@ -78,7 +83,7 @@ function renderResults() {
     const role = element('td', 'role-cell', readableLabel(person.puesto));
     const areaCell = element('td', 'area-cell', readableLabel(person.area));
     const salary = element('td', 'salary-cell');
-    salary.append(element('span', 'gross-value', money.format(person.bruto)), element('span', 'salary-label-small', 'Bruto mensual'), element('span', 'net-value', `${money.format(person.neto)} neto`));
+    salary.append(element('span', 'gross-value', formatMoney(person.bruto)), element('span', 'salary-label-small', 'Bruto mensual'), element('span', 'net-value', `${formatMoney(person.neto)} neto`));
     row.append(nameCell, role, areaCell, salary);
     results.append(row);
   }
@@ -111,9 +116,10 @@ function openPerson(person, trigger = search, updateURL = true) {
   $('#person-name').textContent = readableName(person.nombre);
   $('#person-role').textContent = readableLabel(person.puesto);
   $('#person-area').textContent = readableLabel(person.area);
-  $('#person-gross').textContent = money.format(person.bruto);
-  $('#person-net').textContent = money.format(person.neto);
-  $('#zero-note').hidden = person.neto !== 0;
+  $('#person-gross').textContent = formatMoney(person.bruto);
+  $('#person-net').textContent = formatMoney(person.neto);
+  $('#person-period').textContent = `${university.name} · ${formatPeriod(university.period)}`;
+  $('#person-source-date').textContent = `Actualización en la fuente: ${formatDate(person.actualizacion)}`;
   $('#share-status').textContent = '';
   if (updateURL) {
     const url = queryURL();
@@ -218,11 +224,26 @@ window.addEventListener('popstate', restoreLocation);
 
 async function loadData() {
   try {
-    const response = await fetch('/data/2026/buscador.json');
+    const catalogResponse = await fetch('/data/universities.json');
+    if (!catalogResponse.ok) throw new Error(`HTTP ${catalogResponse.status}`);
+    const catalog = await catalogResponse.json();
+    const id = new URL(location.href).searchParams.get('university');
+    university = catalog.find(item => item.id === id);
+    if (!university) {
+      $('#payroll-search').hidden = true;
+      $('#payroll-results').hidden = true;
+      $('#university-error').textContent = id ? 'Esa universidad no está disponible. Elige otra desde el directorio.' : 'Elige una universidad desde el directorio para consultar su nómina.';
+      $('#university-error').hidden = false;
+      return;
+    }
+    const title = `Nómina ${university.name}`;
+    document.title = `${title} · ¿Cuánto gana mi profe?`;
+    $('#university-name').textContent = title;
+    const response = await fetch(university.url);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     people = await response.json();
     if (!Array.isArray(people) || !people.length) throw new Error('Archivo vacío');
-    const areas = [...new Set(people.map(person => person.area))].sort((a, b) => a.localeCompare(b, 'es'));
+    const areas = [...new Set(people.map(person => person.area).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
     area.replaceChildren(element('option', '', 'Todas las áreas'));
     area.firstElementChild.value = '';
     for (const name of areas) {

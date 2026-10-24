@@ -131,15 +131,15 @@ test('institution mode discovers all its years without registration and isolates
   await putInput(root, 'otra', '2026');
   assert.equal(await runPipeline('nueva-universidad', root, () => {}), 0);
   for (const year of ['2025', '2026']) {
-    const candidate = JSON.parse(await readFile(path.join(root, `data/candidates/nueva-universidad/${year}/nomina.json`)));
+    const candidate = JSON.parse(await readFile(path.join(root, `data/processed/nueva-universidad/${year}/nomina.json`)));
     assert.equal(candidate.anio, year);
     assert.equal(candidate.identificadorInstitucion, 'nueva-universidad');
     assert.equal(candidate.institucion, 'Universidad de prueba');
     assert.equal(candidate.registros.length, 1);
   }
-  await assert.rejects(readFile(path.join(root, 'data/candidates/otra/2026/nomina.json')), { code: 'ENOENT' });
+  await assert.rejects(readFile(path.join(root, 'data/processed/otra/2026/nomina.json')), { code: 'ENOENT' });
   assert.equal(await runPipeline(null, root, () => {}), 0);
-  assert.ok(await readFile(path.join(root, 'data/candidates/otra/2026/nomina.json')));
+  assert.ok(await readFile(path.join(root, 'data/processed/otra/2026/nomina.json')));
 });
 
 test('multiple files block a year, invalidate stale output and do not stop other years', async (t) => {
@@ -149,12 +149,12 @@ test('multiple files block a year, invalidate stale output and do not stop other
   await runPipeline('prueba', root, () => {});
   await writeFile(path.join(directory, 'segunda.json'), JSON.stringify(fixture()));
   assert.equal(await runPipeline(null, root, () => {}), 1);
-  const blocked = JSON.parse(await readFile(path.join(root, 'data/candidates/prueba/2026/nomina.json')));
+  const blocked = JSON.parse(await readFile(path.join(root, 'data/processed/prueba/2026/nomina.json')));
   assert.equal(blocked.estado, 'bloqueado');
   assert.deepEqual(blocked.registros, []);
   const report = JSON.parse(await readFile(path.join(root, 'data/reports/prueba/2026/revision.json')));
   assert.equal(report.conteos.archivo_unico_requerido, 1);
-  const valid = JSON.parse(await readFile(path.join(root, 'data/candidates/prueba/2025/nomina.json')));
+  const valid = JSON.parse(await readFile(path.join(root, 'data/processed/prueba/2025/nomina.json')));
   assert.equal(valid.estado, 'pendiente_revision');
 });
 
@@ -178,7 +178,7 @@ test('local execution is reproducible, preserves originals and invalidates stale
     const input = path.join(root, 'data/raw/prueba/2026/descarga.json');
     await writeFile(input, original);
     const first = await prepareYear('prueba', '2026', root);
-    const output = path.join(root, 'data/candidates/prueba/2026/nomina.json');
+    const output = path.join(root, 'data/processed/prueba/2026/nomina.json');
     const bytes = await readFile(output, 'utf8');
     assert.match(first.fuente.sha256, /^[a-f0-9]{64}$/);
     await prepareYear('prueba', '2026', root);

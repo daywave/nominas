@@ -1,15 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
 import { findPeople, isProfessor } from '../src/scripts/search-utils.js';
 
-const records = JSON.parse(await readFile(new URL('../data/2026/nominas.json', import.meta.url), 'utf8'));
-const people = records.map(person => ({ id: person.id_empleado, nombre: person.nombre_completo, area: person.area_adscripcion,
-  puesto: person.denominacion_cargo, puesto_base: person.descripcion_puesto, bruto: person.remuneracion_bruta_mensual, neto: person.remuneracion_neta_mensual }));
+const people = [
+  { id: 1, nombre: 'DELIA ALMEIDA REYNOSO', area: 'COMUNICACION', puesto: 'JEFA DE PROTOCOLO', puesto_base: 'JEFA', bruto: 200, neto: 100 },
+  { id: 2, nombre: 'ANA PEREZ', area: 'BIOLOGIA', puesto: 'PROFESORA', puesto_base: 'PROF. INVEST. TITULAR', bruto: 300, neto: 200 },
+  { id: 3, nombre: 'LUIS LOPEZ', area: 'BIOLOGIA', puesto: 'PROFESOR', puesto_base: 'PROFESOR DE ASIGNATURA', bruto: 100, neto: 80 },
+  { id: 4, nombre: 'MARIA LOPEZ', area: 'BIOLOGIA', puesto: 'RECTORA', puesto_base: 'RECTOR/A', bruto: 400, neto: 300 },
+];
 
 test('busca con acentos y palabras en distinto orden; acepta área y puesto', () => {
-  assert.ok(findPeople(people, ' REYNÓSO délia ALMEIDA ').some(person => person.id === 549092));
-  assert.ok(findPeople(people, 'délia protocolo').some(person => person.id === 549092));
+  assert.ok(findPeople(people, ' REYNÓSO délia ALMEIDA ').some(person => person.id === 1));
+  assert.ok(findPeople(people, 'délia protocolo').some(person => person.id === 1));
   assert.deepEqual(findPeople(people, 'zzzzPersonaInexistente'), []);
 });
 
@@ -44,4 +46,9 @@ test('ordena de menor a mayor, también con búsqueda y filtros', () => {
     assert.ok(matches.length > 1);
     assert.ok(matches.every((person, index) => index === 0 || matches[index - 1].bruto <= person.bruto));
   }
+});
+
+test('missing amounts are not treated as zero when sorting', () => {
+  const sample = [...people, { id: 5, nombre: 'SIN IMPORTE', area: null, puesto: null, bruto: null, neto: null }];
+  for (const order of ['asc', 'desc']) assert.equal(findPeople(sample, '', { order }).at(-1).id, 5);
 });
