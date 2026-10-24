@@ -18,6 +18,7 @@ let selected = null;
 let ready = false;
 let searchTimer;
 let lastTrigger = null;
+let pendingArea = '';
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -28,7 +29,7 @@ function element(tag, className, text) {
 
 function queryURL() {
   const url = new URL(location.href);
-  const values = { q: search.value.trim(), area: area.value, grupo: group === 'all' ? '' : group, orden: order.value === 'asc' ? 'menor' : '' };
+  const values = { q: search.value.trim(), area: ready ? area.value : pendingArea, grupo: group === 'all' ? '' : group, orden: order.value === 'asc' ? 'menor' : '' };
   for (const [key, value] of Object.entries(values)) {
     if (value) url.searchParams.set(key, value);
     else url.searchParams.delete(key);
@@ -90,18 +91,18 @@ function renderResults() {
 }
 
 function runSearch({ updateURL = true } = {}) {
-  if (!ready) return;
   clearTimeout(searchTimer);
-  page = 1;
-  matches = findPeople(people, search.value, { area: area.value, group, order: order.value });
-  reset.hidden = !search.value && !area.value && group === 'all' && order.value === 'desc';
-  $('.sort-note').textContent = `Ordenado por sueldo bruto, de ${order.value === 'asc' ? 'menor a mayor' : 'mayor a menor'} · MXN`;
-  renderResults();
   if (updateURL) {
     const url = queryURL();
     url.searchParams.delete('persona');
     history.replaceState(null, '', url);
   }
+  if (!ready) return;
+  page = 1;
+  matches = findPeople(people, search.value, { area: area.value, group, order: order.value });
+  reset.hidden = !search.value && !area.value && group === 'all' && order.value === 'desc';
+  $('.sort-note').textContent = `Ordenado por sueldo bruto, de ${order.value === 'asc' ? 'menor a mayor' : 'mayor a menor'} · MXN`;
+  renderResults();
 }
 
 function openPerson(person, trigger = search, updateURL = true) {
@@ -137,6 +138,10 @@ dialog.addEventListener('click', event => {
 });
 search.addEventListener('input', () => {
   clearTimeout(searchTimer);
+  if (!ready) {
+    runSearch();
+    return;
+  }
   searchTimer = setTimeout(runSearch, 120);
 });
 $('#search-form').addEventListener('submit', event => { event.preventDefault(); runSearch(); });
@@ -151,6 +156,7 @@ for (const button of document.querySelectorAll('[data-group]')) {
 }
 reset.addEventListener('click', () => {
   search.value = area.value = '';
+  pendingArea = '';
   order.value = 'desc';
   setGroup('all');
   runSearch();
@@ -188,12 +194,20 @@ $('#share-person').addEventListener('click', async () => {
 function restoreLocation() {
   const url = new URL(location.href);
   search.value = url.searchParams.get('q') || '';
-  area.value = url.searchParams.get('area') || '';
-  if (area.selectedIndex < 0) area.value = '';
+  pendingArea = url.searchParams.get('area') || '';
+  if (ready) {
+    area.value = pendingArea;
+    if (area.selectedIndex < 0) area.value = '';
+  }
   const requestedGroup = url.searchParams.get('grupo');
   order.value = url.searchParams.get('orden') === 'menor' ? 'asc' : 'desc';
   setGroup(['professors', 'others'].includes(requestedGroup) ? requestedGroup : 'all');
   runSearch({ updateURL: false });
+  if (ready) restorePerson();
+}
+
+function restorePerson() {
+  const url = new URL(location.href);
   const id = url.searchParams.get('persona');
   const person = people.find(item => String(item.id) === id);
   if (person) openPerson(person, search, false);
@@ -217,8 +231,11 @@ async function loadData() {
       area.append(option);
     }
     area.disabled = false;
+    area.value = pendingArea;
+    if (area.selectedIndex < 0) area.value = '';
     ready = true;
-    restoreLocation();
+    runSearch({ updateURL: false });
+    restorePerson();
   } catch {
     results.setAttribute('aria-busy', 'false');
     status.replaceChildren(element('span', '', 'No pudimos cargar los datos. '));
@@ -228,5 +245,6 @@ async function loadData() {
     status.append(retry);
   }
 }
+restoreLocation();
 loadData();
 
