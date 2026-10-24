@@ -1,6 +1,6 @@
 # Project guidance
 
-Start with the [README](README.md) for setup and contribution instructions. This document owns project principles and decision boundaries. Use [DESIGN.md](DESIGN.md) for visual rules, the [pipeline guide](scripts/nominas/README.md) for data preparation, and [PLAN.md](PLAN.md) for phase progress. Link to the owning document rather than copying its rules.
+Start with the [README](README.md) for setup and contribution instructions. This document owns project principles and decision boundaries. Use [DESIGN.md](DESIGN.md) for visual rules, the [pipeline guide](scripts/nominas/README.md) for data preparation, [DEPLOYMENT.md](DEPLOYMENT.md) for hosting and performance decisions, and [PLAN.md](PLAN.md) for phase progress. Link to the owning document rather than copying its rules.
 
 ## Purpose
 

@@ -8,19 +8,19 @@ For the project purpose and decision boundaries, read [AGENTS.md](AGENTS.md). Fo
 
 Page structure, typography, palette, search, filters, results, footer, and mobile presentation have been reviewed. The current visual direction belongs in [DESIGN.md](DESIGN.md).
 
-### 2. Measure data standardization complexity — In progress
+### 2. Measure data standardization complexity — Complete
 
 A local Node.js pipeline has processed twelve institutional downloads with shared extraction logic. Candidates have been compared with their originals without dropping records or recalculating amounts.
 
 Inputs, candidates, and reports are organized by institution and year. Institution identity comes from folders, with no manual registry. The pipeline enforces one maintainer-selected reporting period per institution/year. The workflow, reasons, and validation behavior belong in the [pipeline guide](scripts/nominas/README.md).
 
-### 3. Define launch scope — Pending
+### 3. Define launch scope — Complete
 
-The direction is to start with public institutions in Aguascalientes and expand to popular institutions nationally. Exact launch coverage remains a human decision informed by data preparation results. Avoid navigation filters unnecessary for the chosen coverage.
+The initial launch will include the twelve institutions whose downloads have been processed. This defines the initial coverage, not a commitment to cover every public university in Mexico. Preparing their data does not yet make them available on the website.
 
-### 4. Choose deployment and necessary optimizations — Pending
+### 4. Choose deployment and necessary optimizations — In progress
 
-Choose static hosting and assess actual asset sizes and mobile loading. Add optimizations only when the selected data and measured experience justify them.
+Hosting, repository data storage, compression, caching, and audience measurement decisions are documented in [DEPLOYMENT.md](DEPLOYMENT.md). Initial dataset sizes have been measured. Implementation, deployment, and mobile performance verification remain pending.
 
 ### 5. Establish multi-institution navigation — Pending
 
@@ -32,4 +32,4 @@ Add official datasets within the approved scope, using the documented preparatio
 
 ## How to proceed
 
-Follow the phase order. Humans decide scope, priorities, and work allocation. Do not treat later-phase proposals as approved features. Current work remains in phase 2.
+Follow the phase order. Humans decide scope, priorities, and work allocation. Do not treat later-phase proposals as approved features. Current work is in phase 4; infrastructure decisions do not mean the multi-institution website is ready to deploy.

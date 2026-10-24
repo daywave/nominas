@@ -13,6 +13,7 @@ Read the document that owns the subject you are working on:
 | [AGENTS.md](AGENTS.md) | Project purpose, principles, decision boundaries, and validation rules for contributors and agents. |
 | [DESIGN.md](DESIGN.md) | Visual direction and interface behavior. |
 | [Local payroll pipeline](scripts/nominas/README.md) | Download preparation, institution identity, directory layout, commands, reports, and data contribution instructions. |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Hosting, repository data storage, compression, caching, analytics, and launch verification. |
 | [PLAN.md](PLAN.md) | Agreed phases, progress, and pending scope decisions. |
 
 Keep each rule in its owning document and link to it elsewhere. Documentation should explain the current workflow and the reasons behind it; clearly mark approved changes that are not implemented yet. User-facing copy remains in Spanish.
@@ -39,7 +40,7 @@ The build writes a static site to `dist/`. It currently reads the prototype data
 ## Contribute
 
 1. Read the project guidance and the document for your task above.
-2. For data work, follow the pipeline guide before adding downloads or changing preparation rules. Original downloads and generated outputs stay local and are excluded from Git.
+2. For data work, follow the pipeline guide before adding downloads or changing preparation rules. Raw downloads and pipeline artifacts stay local. Prepared website data will be versioned as described in [DEPLOYMENT.md](DEPLOYMENT.md); its promotion step is not implemented yet.
 3. Keep a change focused. Explain what it changes, why, and how you verified it in your pull request.
 4. Follow the validation requirements in [AGENTS.md](AGENTS.md).
 

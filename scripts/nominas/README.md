@@ -30,7 +30,7 @@ data/reports/<institution>/<year>/revision.json
 data/reports/<institution>/<year>/revision.md
 ```
 
-Original downloads and generated outputs stay local and are ignored by Git. `.gitkeep` preserves the input root. Code, documentation, and synthetic tests are versioned. Ignoring paths does not remove files already tracked by Git.
+Original downloads and pipeline outputs stay local and are ignored by Git. `.gitkeep` preserves the input root. Code, documentation, and synthetic tests are versioned. Approved website data will be stored in the repository through a separate promotion step, which is not implemented yet; see [deployment decisions](../../DEPLOYMENT.md). Ignoring paths does not remove files already tracked by Git.
 
 ## Identity and reporting period
 
