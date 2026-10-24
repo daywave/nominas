@@ -6,7 +6,7 @@ This document owns hosting, data distribution, performance, and audience measure
 
 - Host the static Astro build on Cloudflare Pages, using the maintainer's existing Cloudflare domain. No runtime backend is required.
 - Store prepared data in `data/processed/` in the repository. The pipeline writes it directly so contributors do not need a manual transfer step. This keeps contributions and builds straightforward without adding a bucket or release-download workflow. Original downloads and preparation reports remain local; prepared records are not published automatically.
-- Generate a separate static search dataset for each university and year. A visitor should load only the selected university/year, with only the fields needed by the interface. Keep full preparation artifacts out of browser downloads.
+- Generate a separate static search dataset for each university's latest prepared year. A visitor loads only the selected university's data, with only the fields needed by the interface. Keep full preparation artifacts out of browser downloads. Routes and contracts belong in [ARCHITECTURE.md](ARCHITECTURE.md).
 - Use Cloudflare's HTTP response compression, with supported algorithms negotiated by the browser. Do not add application-level decompression libraries or require contributors to maintain compressed source copies.
 - Use browser and CDN caching to avoid unnecessary repeat downloads. Data updates must become visible without serving outdated data indefinitely; the exact cache policy remains to be implemented and verified.
 - Use Cloudflare Web Analytics for visits, page views, and real-user performance measurements. Its browser script adds an external request; do not add other analytics tools without a human decision. Audience metrics are estimates, not exact counts of unique people.
@@ -18,6 +18,8 @@ Compression reduces transfer size, not the original files stored in Git or the a
 The pipeline exports prepared data into a directory included in Git. The static build discovers the latest institutional datasets and generates a university directory, a single shared payroll HTML page, and separate search files. Domain configuration, analytics activation, and deployed cache/compression verification remain pending. No account configuration or deployment has been performed.
 
 ## Verify before launch
+
+Obtain the explicit human go-ahead for the data changes being published, following [human responsibility](AGENTS.md#human-decisions-and-agent-autonomy). An agent can assist review; successful preparation, tests, and build do not replace approval. Do not assume that `pendiente_revision` is a software gate: the current build accepts nonblocked data and does not record approval.
 
 1. Follow the [project validation requirements](AGENTS.md), build the site, and inspect `dist/`. Confirm that only intended website assets are included, with no raw downloads or preparation reports.
 2. Check the selected university/year in the browser's Network panel. Confirm that other universities are not downloaded and that each response uses the expected JSON content type.

@@ -2,14 +2,22 @@
 
 Prepare official payroll downloads on your computer using Node.js, with no additional dependencies. The tool exports candidates and reports; it does not publish or run during website development, builds, or deployment.
 
-Read [project guidance](../../AGENTS.md) for data fidelity, MXN policy, and human decisions. See the [root README](../../README.md) for setup and the [plan](../../PLAN.md) for project phases.
+Read [project guidance](../../AGENTS.md) for data fidelity, MXN policy, and human production approval. See the [root README](../../README.md) for setup and [architecture](../../ARCHITECTURE.md) for how prepared data becomes browser data.
+
+## Accepted input and scope
+
+The selected source is the [Plataforma Nacional de Transparencia](https://consultapublicamx.plataformadetransparencia.org.mx), using its selected payroll JSON structure. This tool is not a generic importer for arbitrary JSON, CSV, spreadsheets, or other platforms. A new university must supply data conforming to this contract; adding a university does not mean adding support for a new format. Incompatible input is not incorporated. Do not solve rejection by weakening checks, guessing column matches, or broadening the pipeline's scope.
+
+The original JSON must contain a nonempty `institucion` string, `columnas` as an array of header strings, and `filas` as an array of row arrays aligned with those headers. Every row must have the declared number of columns. Required payroll headers are maintained once in [`campos` in prepare.js](prepare.js); the validator matches them by normalized text, not position. Additional columns are allowed. The contract does not require a fixed total number of columns, and nested benefit tables are not remuneration inputs for this extraction.
+
+The maintainer chooses the institution, exercise year, and single reporting interval before preparation. If the export does not conform, obtain an input that does. Changing accepted sources or introducing another format is outside the documented onboarding workflow and requires a separate human decision. Never edit the prepared output to disguise an incompatible original.
 
 ## Quick start
 
 1. Obtain an untouched JSON download from the [Plataforma Nacional de Transparencia](https://consultapublicamx.plataformadetransparencia.org.mx). Choose one reporting period for one institution and year.
 2. Create `data/raw/<institution>/<year>/` and place the download inside. The institution identifier must start with a letter or number and contain only ASCII letters, numbers, hyphens, or underscores. The year must contain four digits.
 3. From the repository root, run either command below. Replace `<institution>` with the folder name.
-4. Read the generated report and compare the extracted records with the original. Include the prepared JSON from `data/processed/` in your pull request. Never edit generated records by hand.
+4. Follow the review steps below. The prepared JSON in `data/processed/` is versioned; raw downloads and reports are not. Never edit generated records by hand. A human must authorize production use separately.
 
 ```sh
 npm run nominas:prepare -- --university <institution>
@@ -41,6 +49,32 @@ The year folder must match the source exercise and both reporting dates in every
 Choosing the period is the maintainer's responsibility. One period per institution/year keeps the selection explicit; it does not imply that institutions report the same interval or that a selected period represents habitual pay. To replace it, replace the original download in that year directory and regenerate. Outputs represent the selected input, not an archive of periods.
 
 Institution identifiers and year folders are discovered relative to the project, regardless of the shell's current institution directory. Use the same identifier consistently across years. Different published names across years are preserved rather than reconciled automatically.
+
+## Add or update data
+
+### Add a university
+
+Choose a stable identifier and place its conforming original in the input location above. Run `npm run nominas:prepare -- --university <institution>` and follow the review steps below. No registry, component, or university-specific page is required. Once the processed file is included, rebuilding discovers it automatically.
+
+### Replace the selected period of an existing year
+
+Replace the download inside that institution/year input directory, leaving exactly one JSON. Keep the identifier and year unchanged. Run the same institution command, then review the regenerated file and reports. The previous outputs for each processed target are overwritten, not merged; do not keep competing periods in that directory. A failed preparation replaces that target with a blocked empty result, so inspect failures before incorporating changes.
+
+### Add a newer year
+
+Create another year directory under the same institution identifier and place its original there. Run the institution command and review the new output. It processes **all years present under that institution in `data/raw`**, not every year already stored in `data/processed`. Prepared years without a corresponding local raw input stay untouched.
+
+The next website build selects the highest prepared year. Earlier processed years remain in Git, but the current interface does not expose historical data, a year selector, or cross-year person profiles. Do not infer that older prepared years produce public search files. Current shared-link behavior is explained in [architecture](../../ARCHITECTURE.md#current-search-and-url-behavior).
+
+### Review the extraction
+
+1. Confirm that the original belongs to the intended institution and that its exercise and interval match the selected folder. The script cannot establish which university an abbreviation means.
+2. Read both local reports. Resolve blocking errors before considering the output usable. Check that nonblocked output has the same record count as the original; these are records, not unique people.
+3. Compare reporting dates and extracted fields against the original, including normal rows and rows with findings. Verify that missing cells, zeros, extra decimals, names, descriptions, and amounts were retained or converted according to the documented rules.
+4. Review the changed processed file, run `npm run build`, and use `npm run preview` to open `/` and `/nomina/?university=<institution>`. Check the institution, selected year, record counts, and displayed values. Use the [project validation requirements](../../AGENTS.md#design-and-validation) for relevant code changes.
+5. Obtain the explicit human go-ahead before these data changes reach production. An agent can assist comparison, but the human remains responsible. Follow [deployment guidance](../../DEPLOYMENT.md#verify-before-launch); no software flag or promotion command records this approval.
+
+Review verifies extraction fidelity, not whether the university's reported remuneration is correct. Do not recalculate payments, fill missing personal information, merge repeated names, or add explanations to the interface because of an internal finding. Versioning data or a passing build does not authorize publishing it.
 
 ## What preparation does
 
@@ -96,9 +130,9 @@ Reports count records and findings, not unique people. A row can have multiple f
 
 Check counts, dates, periods, and extracted fields against the original. Findings do not authorize changing reported remuneration or adding interface explanations. Consult [project guidance](../../AGENTS.md) when unsure; investigate the original first. Keep institution-specific observations in reports rather than turning them into global conventions.
 
-## Contribute changes
+## Verify pipeline code changes
 
-Add a supported institution through directories alone, prepare it, include its processed output in Git, and rebuild the website. The catalog is generated automatically; no institution registry is needed. If its format is unsupported, investigate before changing extraction: document an approved reusable mapping or format rule and add a focused regression test. Do not guess column matches or patch outputs manually. The prototype dataset is not a correction source.
+Input acceptance is bounded by the selected contract above. For an approved correction to the implementation of that contract, inspect the original, keep the change focused, and add a meaningful regression test. This is maintenance of the chosen format, not an invitation to add importers. The prototype dataset is not a correction source.
 
 ```sh
 node --test tests/nominas.test.js

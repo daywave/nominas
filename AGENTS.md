@@ -1,6 +1,6 @@
 # Project guidance
 
-Start with the [README](README.md) for setup and contribution instructions. This document owns project principles and decision boundaries. Use [DESIGN.md](DESIGN.md) for visual rules, the [pipeline guide](scripts/nominas/README.md) for data preparation, [DEPLOYMENT.md](DEPLOYMENT.md) for hosting and performance decisions, and [PLAN.md](PLAN.md) for phase progress. Link to the owning document rather than copying its rules.
+Start with the [README](README.md) for setup and task navigation. This document owns project principles and decision boundaries. Use [ARCHITECTURE.md](ARCHITECTURE.md) for contracts and code extension points, [DESIGN.md](DESIGN.md) for visual rules, the [pipeline guide](scripts/nominas/README.md) for data preparation, and [DEPLOYMENT.md](DEPLOYMENT.md) for production operations. Link to the owning document rather than copying its rules.
 
 ## Purpose
 
@@ -38,6 +38,8 @@ Agents may resolve routine implementation details within the authorized scope. D
 
 When data is unclear, inspect the original download first. If delegating that investigation, use a Luna sub-agent.
 
+A human must explicitly approve data changes before they reach production. An agent may help prepare, compare, and review data, but responsibility and the final go-ahead remain human. Preparation success, a passing build, or versioning a file is not production approval; there is no automated approval flag or promotion command.
+
 ## Technical boundaries
 
 - Keep the site static. There is no runtime backend or database.
@@ -45,6 +47,7 @@ When data is unclear, inspect the original download first. If delegating that in
 - Search, filters, pagination, and interactive results run in the browser.
 - A JSON file generated at build time is a static asset, not a runtime API.
 - Do not add a UI framework, server, external runtime service, or dependency without a human decision.
+- Payroll input uses the selected Plataforma Nacional de Transparencia JSON structure described in the pipeline guide. This is not a general-purpose importer. An input must conform to that contract to be included; do not expand source or format support as routine onboarding work.
 
 ## Truthful presentation
 
