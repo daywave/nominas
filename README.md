@@ -1,21 +1,32 @@
 # ¿Cuánto gana mi profe?
 
-Las reglas visuales y de contenido están en [DESIGN.md](DESIGN.md).
+An independent portal for finding the reported remuneration of professors and staff at public universities in Mexico. Help people find a person, read their reported pay, and share the result. The website currently covers UAA; preparing other institutions does not make them available on the website.
 
-Buscador independiente de remuneraciones universitarias, construido con Astro, CSS y JavaScript de navegador. La institución disponible actualmente es la UAA: «Nómina UAA» identifica esa nómina, no la marca del proyecto. Sin React, base de datos ni servicios externos en tiempo de ejecución.
+The site uses Astro, CSS, and browser JavaScript. It is static: search, filters, pagination, and individual records run in the browser. Data preparation is a separate, manually executed local tool.
 
-Repositorio: [sebhdz/nominas-uaa](https://github.com/sebhdz/nominas-uaa). Puedes proponer cambios mediante un pull request o reportar errores mediante un issue, indicando la persona o registro, el periodo y la fuente que permita verificar la corrección. No incluyas información personal ajena a la publicación oficial.
+## Start here
 
-## Desarrollo
+Read the document that owns the subject you are working on:
 
-Requiere Node.js 22.12 o superior.
+| Document | Responsibility |
+| --- | --- |
+| [AGENTS.md](AGENTS.md) | Project purpose, principles, decision boundaries, and validation rules for contributors and agents. |
+| [DESIGN.md](DESIGN.md) | Visual direction and interface behavior. |
+| [Local payroll pipeline](scripts/nominas/README.md) | Download preparation, institution identity, directory layout, commands, reports, and data contribution instructions. |
+| [PLAN.md](PLAN.md) | Agreed phases, progress, and pending scope decisions. |
+
+Keep each rule in its owning document and link to it elsewhere. Documentation should explain the current workflow and the reasons behind it; clearly mark approved changes that are not implemented yet. User-facing copy remains in Spanish.
+
+## Run the website locally
+
+Use the Node.js version required by [package.json](package.json). From the repository root:
 
 ```sh
 npm install
 npm run dev
 ```
 
-## Verificación y producción
+Open the local URL printed by Astro. To verify the application and preview a production build:
 
 ```sh
 npm test
@@ -23,24 +34,24 @@ npm run build
 npm run preview
 ```
 
-`npm run build` genera `dist/`, lista para un alojamiento estático. Astro genera el JSON utilizado por el buscador a partir de `data/2026/nominas.json`; no hay que mantener copias manualmente ni ejecutar Python. La descarga de archivos no forma parte del alcance actual.
+The build writes a static site to `dist/`. It currently reads the prototype dataset at `data/2026/nominas.json` through `src/pages/data/2026/buscador.json.js`. That dataset has not been validated as a replacement for the original downloads. Pipeline candidates do not replace it automatically.
 
-## Alcance
+## Contribute
 
-Una búsqueda flexible por nombres, adscripciones y puestos, sin importar acentos, mayúsculas u orden de palabras. Filtros rápidos por profesores u otros puestos y selector de área. Los resultados se ordenan por sueldo bruto de mayor a menor de forma predeterminada, con selector para cambiar a menor a mayor. Tabla con quince personas por página, nombres destacados en dos renglones, bruto y neto visibles y ficha individual con enlace compartible.
+1. Read the project guidance and the document for your task above.
+2. For data work, follow the pipeline guide before adding downloads or changing preparation rules. Original downloads and generated outputs stay local and are excluded from Git.
+3. Keep a change focused. Explain what it changes, why, and how you verified it in your pull request.
+4. Follow the validation requirements in [AGENTS.md](AGENTS.md).
 
-Área y departamento comparten un filtro porque la fuente solo incluye un campo de adscripción. La búsqueda y los filtros se ejecutan en el navegador.
+Report issues or submit pull requests in [the repository](https://github.com/sebhdz/nominas-uaa). For a data issue, identify the institution, reporting period, and source record needed to reproduce it. Include only information relevant to the public source.
 
-Fuente: Plataforma Nacional de Transparencia, según la procedencia indicada por el proveedor del archivo. Periodo abril–junio de 2026. Los importes se reportan como mensuales, en pesos mexicanos. La fuente incluye distintas funciones, no exclusivamente docentes. Los importes cero se conservan sin inferir su motivo.
+## Code map
 
-## Estructura
-
-- `src/pages/index.astro`: página de búsqueda y ficha.
-- `src/components/Footer.astro`: único footer, con definiciones visibles en una fila de escritorio, enlace a la fuente, actualización y estilos propios.
-- `src/styles/global.css`: diseño editorial y adaptación móvil.
-- `src/scripts/search.js`: interacción, ficha y enlaces.
-- `src/scripts/search-utils.js`: normalización y búsqueda.
-- `src/pages/data/2026/buscador.json.js`: endpoint estático que genera el índice del buscador durante la compilación.
-- `data/2026/nominas.json`: fuente original, sin modificaciones.
-
-El alcance actual corresponde a un solo periodo. Al incorporar históricos habrá que añadir la selección de periodo y actualizar las etiquetas de la interfaz.
+- `src/pages/index.astro`: search page and individual record dialog.
+- `src/components/Footer.astro`: footer and its styles.
+- `src/styles/global.css`: shared visual styles and responsive layout.
+- `src/scripts/search.js`: browser interaction and shareable URLs.
+- `src/scripts/search-utils.js`: search and filtering helpers.
+- `src/pages/data/2026/buscador.json.js`: build-time generation of the static search dataset.
+- `scripts/nominas/`: local data preparation tool and its guide.
+- `tests/`: behavior tests using Node's built-in test runner.

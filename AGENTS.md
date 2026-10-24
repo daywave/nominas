@@ -1,5 +1,7 @@
 # Project guidance
 
+Start with the [README](README.md) for setup and contribution instructions. This document owns project principles and decision boundaries. Use [DESIGN.md](DESIGN.md) for visual rules, the [pipeline guide](scripts/nominas/README.md) for data preparation, and [PLAN.md](PLAN.md) for phase progress. Link to the owning document rather than copying its rules.
+
 ## Purpose
 
 **¿Cuánto gana mi profe?** is an independent portal for viewing the reported remuneration of professors and staff at public universities in Mexico. The current implementation covers the UAA; broader coverage is a product direction, not a claim about the data already available.
@@ -34,6 +36,8 @@ Humans decide scope, major product behavior, architecture, new dependencies, and
 
 Agents may resolve routine implementation details within the authorized scope. Do not repeatedly request approval for a decision the user has already made. If a choice would expand scope or establish a new project policy, ask instead of assuming.
 
+When data is unclear, inspect the original download first. If delegating that investigation, use a Luna sub-agent.
+
 ## Technical boundaries
 
 - Keep the site static. There is no runtime backend or database.
@@ -47,6 +51,9 @@ Agents may resolve routine implementation details within the authorized scope. D
 - Identify the institution, source, reporting period, and source update date where relevant.
 - Distinguish gross from net remuneration and monthly amounts from reporting-period totals.
 - Do not invent missing information or present an interpretation as a fact published by the source.
+- Clean and standardize representation without correcting, recalculating, or reinterpreting reported remuneration.
+- Treat preparation anomalies as internal checks; do not automatically turn them into interface warnings or explanations.
+- Handle all amounts in Mexican national currency (MXN). Preserve original currency fields for traceability.
 - Clearly explain any approved classification used by the interface; do not imply it is official when it is not.
 - Keep the tone direct and questioning without unsupported allegations about individuals.
 
@@ -61,3 +68,4 @@ Use `DESIGN.md` for visual guidance. The latest explicit user decisions take pre
 - Do not introduce new testing tools or dependencies without a demonstrated need and a human decision.
 
 Keep documentation concise and aligned with agreed decisions. Do not document speculative features or turn temporary experiments into permanent conventions.
+Document approved rules as general principles; keep institution-specific findings in review reports.

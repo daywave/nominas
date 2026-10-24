@@ -1,64 +1,35 @@
-# Plan de ¿Cuánto gana mi profe?
+# Project plan
 
-## Objetivo
+For the project purpose and decision boundaries, read [AGENTS.md](AGENTS.md). For setup and contribution instructions, start with the [README](README.md).
 
-Llegar a la mayor cantidad de personas posible para facilitar la consulta de remuneraciones universitarias y promover la transparencia y la concientización. La viralidad es un medio, no un fin: la verdad y la claridad tienen prioridad.
+## Agreed phases
 
-La experiencia debe ser sencilla, legible y pensada primero para celulares. El alcance, las prioridades y el reparto del trabajo los decide una persona; los agentes ayudan a ejecutarlos.
+### 1. Polish the design — Complete
 
-## Fases acordadas
+Page structure, typography, palette, search, filters, results, footer, and mobile presentation have been reviewed. The current visual direction belongs in [DESIGN.md](DESIGN.md).
 
-### 1. Terminar de pulir el diseño — Completada
+### 2. Measure data standardization complexity — In progress
 
-- Definir estructura, tipografías y paleta de colores.
-- Pulir buscador, filtros, resultados y footer.
-- Adaptar la presentación a móvil y escritorio.
-- Revisar mantenibilidad y simplicidad antes de avanzar.
+A local Node.js pipeline has processed twelve institutional downloads with shared extraction logic. Candidates have been compared with their originals without dropping records or recalculating amounts.
 
-La primera versión permite consultar la nómina de la UAA. La marca es **¿Cuánto gana mi profe?**; «Nómina UAA» identifica la institución.
+Inputs, candidates, and reports are organized by institution and year. Institution identity comes from folders, with no manual registry. The pipeline enforces one maintainer-selected reporting period per institution/year. The workflow, reasons, and validation behavior belong in the [pipeline guide](scripts/nominas/README.md).
 
-### 2. Medir la complejidad de estandarizar los datos — En curso
+### 3. Define launch scope — Pending
 
-- Examinar varias descargas oficiales de la Plataforma Nacional de Transparencia.
-- Comparar su estructura y las diferencias que afecten a la consulta.
-- Medir el esfuerzo necesario para preparar datos utilizables.
-- Evaluar si conviene automatizar alguna parte o resolverla manualmente.
+The direction is to start with public institutions in Aguascalientes and expand to popular institutions nationally. Exact launch coverage remains a human decision informed by data preparation results. Avoid navigation filters unnecessary for the chosen coverage.
 
-Todavía no se ha decidido si habrá un pipeline, qué herramientas se usarían ni si este trabajo será recurrente o se hará una sola vez.
+### 4. Choose deployment and necessary optimizations — Pending
 
-### 3. Definir el alcance de la página — Pendiente
+Choose static hosting and assess actual asset sizes and mobile loading. Add optimizations only when the selected data and measured experience justify them.
 
-- Decidir si el lanzamiento tendrá alcance estatal o nacional, con base en lo aprendido en la fase anterior.
-- Definir qué instituciones y periodos se incluirán.
-- Evitar filtros y opciones que no sean necesarios para el alcance elegido. Si la cobertura es estatal, no hace falta un filtro de estados.
+### 5. Establish multi-institution navigation — Pending
 
-La cobertura nacional es una posibilidad, no una condición para publicar una primera versión útil.
+Decide how people find their institution, move from a shared link to another institution, and share direct institution links. Institution pages and a directory have been discussed; final navigation is not implemented. Keep finding a person as the main action.
 
-### 4. Decidir el deploy y las optimizaciones necesarias — Pendiente
+### 6. Expand available data — Pending
 
-- Elegir cómo y dónde publicar el sitio estático.
-- Revisar los tamaños de archivos y la experiencia de carga, especialmente en celular.
-- Introducir únicamente las optimizaciones que hagan falta para los datos y el alcance reales.
+Add official datasets within the approved scope, using the documented preparation workflow. Preparing a candidate does not make it available on the website.
 
-Mantener el sitio sin backend.
+## How to proceed
 
-### 5. Establecer la nueva estructura de la página — Pendiente
-
-- Organizar la navegación según el alcance aprobado.
-- Facilitar que alguien encuentre su institución aunque reciba el enlace de otra universidad.
-- Definir enlaces directos y compartibles para las instituciones disponibles.
-- Mantener el buscador de personas como la acción principal dentro de cada nómina.
-
-Las páginas por universidad y el directorio de instituciones son propuestas discutidas; la estructura final se decidirá en esta fase.
-
-### 6. Agregar la mayor cantidad de datos posible — Pendiente
-
-- Incorporar los datos oficiales disponibles dentro del alcance aprobado.
-- Publicar únicamente información que podamos presentar de forma clara y verificable.
-- Identificar la institución, el periodo, la fuente y su actualización.
-
-La cantidad de instituciones no debe comprometer la verdad ni la facilidad de uso.
-
-## Forma de avanzar
-
-Respetar el orden de las fases. No dar por resueltas decisiones de fases posteriores ni añadir herramientas o funciones preventivamente. El siguiente paso es evaluar los datos de la fase 2, cuando el usuario indique comenzar.
+Follow the phase order. Humans decide scope, priorities, and work allocation. Do not treat later-phase proposals as approved features. Current work remains in phase 2.

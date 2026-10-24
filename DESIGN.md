@@ -1,47 +1,45 @@
-# Diseño de ¿Cuánto gana mi profe?
+# Visual design
 
-## Dirección actual
+Start with the [README](README.md) for contribution instructions and [AGENTS.md](AGENTS.md) for product principles. This document owns visual direction and current interface behavior; it does not define data preparation rules.
 
-La referencia visual proporcionada por el usuario define la estructura: franja de información pública, titular de cartel, descripción breve, buscador ancho, filtros rápidos, tabla y pie. Esta dirección sustituye la anterior composición con serif, cabecera institucional y controles avanzados.
+## Direction
 
-Marca del proyecto: **¿Cuánto gana mi profe?**. **Nómina UAA** identifica la institución encima de la pregunta; ese nombre cambiará según la universidad. La franja superior es un marquee de «Información pública», sin el nombre del proyecto, sin botón de pausa y con soporte para movimiento reducido.
+Keep an editorial, youthful, direct presentation: a public-information strip, poster headline, brief description, wide search field, compact filters, results table, and footer. Avoid excessive decoration.
 
-## Paleta propia
+The brand is **¿Cuánto gana mi profe?**. **Nómina UAA** identifies the current institution above the question and will vary with institution coverage. The top marquee repeats “Información pública”, without the project name or a pause button, and respects reduced-motion preferences.
 
-Los colores evocan una relación con la UAA, sin reproducir su identidad institucional ni usar su escudo o flama. Las referencias Pantone proporcionadas orientan la familia cromática, no son valores que deban copiarse literalmente.
+## Palette
 
-| Uso | Color |
+The design may evoke an institutional relationship without reproducing official branding, seals, or emblems. Salary colors do not express judgments about amounts.
+
+| Role | Color |
 | --- | --- |
-| Fondo arena | `#EAE2D2` |
-| Tinta casi negra | `#242321` |
-| Acento mostaza | `#D9AD42` |
-| Mostaza para texto sobre arena | `#86610E` |
-| Filas blanco cálido | `#FFFEF8` |
-| Columna de sueldo | `#D9AD42` |
+| Sand background | `#EAE2D2` |
+| Near-black ink | `#242321` |
+| Mustard accent and salary column | `#D9AD42` |
+| Dark mustard text on sand | `#86610E` |
+| Warm-white rows | `#FFFEF8` |
 
-La paleta puede seguir ajustándose. El contraste y la legibilidad deben mantenerse. Los colores de sueldos no expresan juicios sobre los importes.
+Mustard accents the marquee, search action, salary column, footer statement, and open-source link. The headline accent uses dark mustard for contrast on sand, without a background strip. The final footer section has a dark background. Preserve contrast and readability.
 
-El mostaza acentúa el marquee, «mi profe?», el botón «Ver sueldo», los sueldos, la firma editorial del cierre y el botón de código abierto. En «mi profe?» las letras usan un mostaza más oscuro para mantener contraste sobre arena, sin franja de fondo.
+## Typography and composition
 
-## Composición
+- Use a heavy condensed uppercase headline. Controls, column headings, and general body text use monospace. Georgia is reserved for editorial accents, including the introduction, dictionary terms, and footer statement. Table text uses sans serif, with condensed gross amounts. Do not add external font downloads.
+- Use straight borders, simple blocks, and clear rules. Avoid shadows, gradients, stickers, decorative arrows, illustrations, and extra elements competing with search.
+- On desktop, show name, position, area/department, and monthly pay. Give names priority: 22px sans serif, weight 700, line-height 1.3. The current interface splits published given names and surnames into two lines; preserve source accents and display interior name particles in lowercase. The full name remains available through the record details and accessible labeling.
+- Position and area use bold centered sans serif. Gross pay is large and condensed, followed closely by its label and bold net pay. Open details from the name.
+- At widths up to 700px, compact each row into information on the left and pay on the right, with corresponding headings. Preserve the light information background, mustard salary background, outer border, and row separators. Keep name and pay together without horizontal scrolling or duplicated rendering.
 
-- Titular en mayúsculas, pesado y condensado. Encabezados de columnas, controles y texto general con tipografía monoespaciada. Georgia se reserva como acento para la descripción principal, los términos del diccionario y «Hecho para leerse». Las filas de la tabla usan sans serif; la tipografía condensada se conserva en el bruto. Sin descargas externas.
-- Bordes rectos, líneas claras y bloques simples. Sin sombras, degradados ni tarjetas añadidas.
-- Sin sticker ni nota editorial junto a la descripción.
-- Sin flechas decorativas, ilustraciones ni elementos adicionales que distraigan del buscador.
-- La tabla contiene nombre, puesto, área/departamento y sueldo mensual. El nombre tiene prioridad en espacio y peso: sans serif de 22 px, peso 700 e interlineado de 1.3. Se divide usando los campos publicados: nombres de pila en el primer renglón y apellidos en el segundo. Se conservan los acentos de la fuente y las partículas interiores como «de» y «del» se presentan en minúsculas. El nombre completo queda disponible en su ficha, etiqueta accesible y tooltip. Puesto y área tienen menor peso visual. La columna azul de sueldo mantiene el bruto grande y condensado, su etiqueta debajo y el neto en negritas inmediatamente debajo de la etiqueta, sin margen adicional; ficha accesible desde el nombre.
-- Hasta 700 px, cada fila se compacta en dos bloques: nombre, puesto y área a la izquierda; bruto y neto a la derecha. Mantener fondo claro para la información, azul más intenso para el sueldo, borde exterior y separadores de filas. Sin desplazamiento horizontal ni duplicar datos o renderizado; la tabla de escritorio se conserva.
+## Current interface behavior
 
-## Contenido y comportamiento
+The introduction reads: “Sueldos de profesores y funcionarios de la UAA. Se pagan con dinero público, así que se leen con ojos públicos.” User-facing text stays in Spanish.
 
-Descripción: «Sueldos de profesores y funcionarios de la UAA. Se pagan con dinero público, así que se leen con ojos públicos.»
+Search accepts names, positions, and areas. Default order is gross pay descending; a compact selector allows ascending order and retains the choice when searching, filtering, or sharing. Filters are Todos, Profesores, Otros puestos, and area. Show fifteen records per page; records are not verified unique people.
 
-Búsqueda por nombre, puesto o adscripción. Orden predeterminado por sueldo bruto de mayor a menor. Un selector permite cambiar a menor a mayor y conserva el orden al buscar, filtrar o compartir el enlace. Filtros: Todos, Profesores, Otros puestos y selector de área. Selector de orden compacto, sin paneles de rangos salariales. Quince personas por página.
-
-«Profesores» usa la descripción de puesto publicada que comienza con PROF. o PROFESOR; «Otros puestos» agrupa el resto. Es una ayuda de consulta documentada en la fuente, no una clasificación oficial ni una identificación exhaustiva de funciones docentes. Área y departamento se consultan juntos porque la fuente publica una sola adscripción.
-
-Mantener Astro estático, búsqueda y renderizado de resultados en el navegador. Sin backend ni nuevas dependencias. Fuente, periodo e independencia del proyecto visibles al pie. La descarga de datos queda fuera del alcance actual.
+The current teacher filter matches source position descriptions beginning with PROF. or PROFESOR. It is a browsing aid, not an official classification or exhaustive identification of teaching duties. Area and department share a control because the source has one affiliation field. Do not assume this classification covers future institutions without a human decision.
 
 ## Footer
 
-Colofón editorial sin dibujo ASCII, con cuatro definiciones visibles en una sola fila en escritorio: nómina, fuente, bruto y neto. Dos columnas en tablet y móvil, con tipografía más compacta en móvil y separadores punteados. La independencia del proyecto y la fecha de actualización se presentan como notas al pie, fuera del diccionario. La Plataforma Nacional de Transparencia se enlaza directamente desde «fuente» y la fecha se identifica como actualización reportada por la fuente. Sin sección desplegable ni descarga de archivos. Sello enlazado al repositorio de código abierto y firma «Hecho para leerse». Prueba de paleta: fondo azul eléctrico lavado, sueldos en un tono más intenso y cierre casi negro.
+Use four dictionary-style definitions: nómina, fuente, bruto, and neto. Show one row on desktop and two columns on mobile, with compact mobile text and dotted dividers. Keep independence and source update information outside the dictionary.
+
+Link the source directly to the Plataforma Nacional de Transparencia and the open-source seal to the repository. Place the editorial statement and project information in the dark final section, with the open-source link vertically centered alongside the text on desktop. Avoid ASCII drawings, expandable source sections, and data download controls.
