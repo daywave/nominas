@@ -17,7 +17,7 @@ La experiencia debe ser sencilla, legible y pensada primero para celulares. El a
 
 La primera versión permite consultar la nómina de la UAA. La marca es **¿Cuánto gana mi profe?**; «Nómina UAA» identifica la institución.
 
-### 2. Medir la complejidad de estandarizar los datos — Pendiente
+### 2. Medir la complejidad de estandarizar los datos — En curso
 
 - Examinar varias descargas oficiales de la Plataforma Nacional de Transparencia.
 - Comparar su estructura y las diferencias que afecten a la consulta.
