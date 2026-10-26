@@ -1,4 +1,5 @@
 import { findPeople } from './search-utils.js';
+import { loadPerception, resetPerception, setupPerceptionListeners } from './votes.js';
 
 const $ = selector => document.querySelector(selector);
 const search = $('#search');
@@ -127,10 +128,12 @@ function openPerson(person, trigger = search, updateURL = true) {
     history.pushState(null, '', url);
   }
   if (!dialog.open) dialog.showModal();
+  loadPerception(university.id, person.nombre);
 }
 
 dialog.addEventListener('close', () => {
   if (dialog.open) return;
+  resetPerception();
   selected = null;
   const url = new URL(location.href);
   url.searchParams.delete('persona');
@@ -268,4 +271,5 @@ async function loadData() {
 }
 restoreLocation();
 loadData();
+setupPerceptionListeners();
 

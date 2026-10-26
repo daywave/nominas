@@ -96,6 +96,39 @@ dialog::backdrop { background: #242321bb; }
 .salaries strong { display: block; font-size: 30px; font-weight: 650; line-height: 1.2; margin-top: 12px; font-variant-numeric: tabular-nums; }
 .salaries p { font-size: 11px; margin-bottom: 0; }
 .currency-note { font-size: 11px; line-height: 1.7; }
+.recommend-card { margin-top: 24px; padding: 18px 0 16px; border-top: 2px solid var(--ink); }
+.recommend-header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+.recommend-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.recommend-badge { font-size: 11px; font-weight: 600; color: #625c52; }
+.recommend-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.recommend-btn { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 48px; padding: 10px 16px; background: var(--white); border: 2px solid var(--ink); color: var(--ink); font-size: 12px; font-weight: 700; }
+.recommend-btn:hover { background: #f6ecdf; }
+.recommend-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.recommend-btn[aria-pressed="true"] .recommend-count { color: var(--accent); }
+.recommend-icon { font-size: 16px; }
+.recommend-text { flex-grow: 1; text-align: left; }
+.recommend-count { font-size: 14px; font-variant-numeric: tabular-nums; font-weight: 800; }
+.recommend-status { font-size: 11px; margin: 8px 0 0; min-height: 16px; color: #625c52; }
+.perception-card { margin-top: 18px; padding: 18px 0 16px; border-top: 1px solid var(--divider); border-bottom: 2px solid var(--ink); }
+.perception-header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+.perception-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.perception-total { font-size: 11px; color: #625c52; }
+.perception-bar { display: flex; height: 8px; background: var(--divider); border: 1px solid var(--ink); overflow: hidden; margin-bottom: 16px; }
+.bar-segment { height: 100%; transition: width 0.3s ease; }
+.bar-more { background: #3b82f6; }
+.bar-fair { background: var(--accent); }
+.bar-less { background: #e05252; }
+.perception-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.perception-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 48px; padding: 8px 6px; background: var(--white); border: 2px solid var(--ink); color: var(--ink); font-size: 11px; font-weight: 700; text-align: center; }
+.perception-btn:hover { background: #f6ecdf; }
+.perception-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.perception-btn[aria-pressed="true"] .btn-count { color: var(--accent); }
+.btn-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; }
+.dot-more { background: #3b82f6; }
+.dot-fair { background: var(--accent); }
+.dot-less { background: #e05252; }
+.btn-count { font-size: 13px; font-variant-numeric: tabular-nums; font-weight: 800; }
+.perception-status { font-size: 11px; margin: 10px 0 0; min-height: 16px; color: #625c52; }
 .person-source { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 24px; font-size: 11px; }
 .share-status { font-size: 12px; line-height: 1.6; min-height: 19px; }
 .share-status input { display: block; margin-top: 6px; width: 100%; }
@@ -158,5 +191,8 @@ body:has(dialog[open]) { overflow: hidden; }
   .salaries { gap: 14px; }
   .salary-label { font-size: 10px; }
   .salaries strong { font-size: 26px; }
+  .recommend-actions { grid-template-columns: 1fr; gap: 6px; }
+  .perception-actions { grid-template-columns: 1fr; gap: 6px; }
+  .perception-btn { flex-direction: row; justify-content: space-between; padding: 10px 14px; }
   .person-source { flex-direction: column; align-items: flex-start; }
 }

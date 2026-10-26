@@ -34,6 +34,54 @@ import Page from "../layouts/Page.astro";
     <div class="person-content"><p id="person-period" class="person-period"></p><h2 id="person-name"></h2><p id="person-role" class="person-role"></p><p id="person-area" class="person-area"></p>
       <div class="salaries"><div><span class="salary-label">BRUTO MENSUAL</span><strong id="person-gross"></strong><p>Antes de deducciones</p></div><div><span class="salary-label">NETO MENSUAL</span><strong id="person-net"></strong><p>Después de deducciones</p></div></div>
       <p class="currency-note">Pesos mexicanos (MXN). Importes mensuales reportados, no acumulados del periodo informado.</p>
+      <section class="recommend-card" aria-labelledby="recommend-title">
+        <div class="recommend-header">
+          <span id="recommend-title" class="recommend-title">¿RECOMIENDAS A ESTE PROFESOR?</span>
+          <span id="recommend-badge" class="recommend-badge" aria-live="polite">Sin opiniones</span>
+        </div>
+        <div class="recommend-actions" role="group" aria-label="Recomendar o no al docente">
+          <button id="vote-recommend-yes" class="recommend-btn" type="button" data-choice="yes" aria-pressed="false">
+            <span class="recommend-icon" aria-hidden="true">👍</span>
+            <span class="recommend-text">Sí, lo recomiendo</span>
+            <span id="count-rec-yes" class="recommend-count">0</span>
+          </button>
+          <button id="vote-recommend-no" class="recommend-btn" type="button" data-choice="no" aria-pressed="false">
+            <span class="recommend-icon" aria-hidden="true">👎</span>
+            <span class="recommend-text">No lo recomiendo</span>
+            <span id="count-rec-no" class="recommend-count">0</span>
+          </button>
+        </div>
+        <p id="recommend-status" class="recommend-status" role="status" aria-live="polite"></p>
+      </section>
+      <section class="perception-card" aria-labelledby="perception-title">
+        <div class="perception-header">
+          <span id="perception-title" class="perception-title">¿QUÉ OPINAS DE ESTE SUELDO?</span>
+          <span id="perception-total" class="perception-total" aria-live="polite">0 opiniones</span>
+        </div>
+        <div class="perception-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Distribución de opiniones">
+          <div id="bar-more" class="bar-segment bar-more" style="width: 0%"></div>
+          <div id="bar-fair" class="bar-segment bar-fair" style="width: 0%"></div>
+          <div id="bar-less" class="bar-segment bar-less" style="width: 0%"></div>
+        </div>
+        <div class="perception-actions" role="group" aria-label="Opciones de percepción sobre el sueldo">
+          <button id="vote-more" class="perception-btn" type="button" data-choice="more" aria-pressed="false">
+            <span class="btn-dot dot-more" aria-hidden="true"></span>
+            <span class="btn-text">Merece más</span>
+            <span id="count-more" class="btn-count">0</span>
+          </button>
+          <button id="vote-fair" class="perception-btn" type="button" data-choice="fair" aria-pressed="false">
+            <span class="btn-dot dot-fair" aria-hidden="true"></span>
+            <span class="btn-text">Me parece justo</span>
+            <span id="count-fair" class="btn-count">0</span>
+          </button>
+          <button id="vote-less" class="perception-btn" type="button" data-choice="less" aria-pressed="false">
+            <span class="btn-dot dot-less" aria-hidden="true"></span>
+            <span class="btn-text">Merece menos</span>
+            <span id="count-less" class="btn-count">0</span>
+          </button>
+        </div>
+        <p id="perception-status" class="perception-status" role="status" aria-live="polite"></p>
+      </section>
       <div class="person-source"><span id="person-source-date"></span><button id="share-person" class="text-button" type="button">Copiar enlace</button></div>
       <p id="share-status" class="share-status" role="status"></p><a class="source-reference" href="https://consultapublicamx.plataformadetransparencia.org.mx" target="_blank" rel="noopener noreferrer">Consultar la fuente oficial</a>
     </div>

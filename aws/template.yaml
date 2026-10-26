@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Nominas - API de Percepción Salarial con DynamoDB, Lambda y Hono
+
+Globals:
+  Function:
+    Timeout: 5
+    MemorySize: 256
+    Runtime: nodejs20.x
+
+Resources:
+  VotesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: NominasVotes
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+
+  VotesApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowMethods: ['GET', 'POST', 'OPTIONS']
+        AllowHeaders: ['Content-Type', 'X-Voter-Token']
+        AllowOrigins: ['*']
+
+  VotesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/votes/
+      Handler: index.handler
+      Environment:
+        Variables:
+          VOTES_TABLE: !Ref VotesTable
+          HASH_SALT: 'nominas_secret_salt_2026'
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref VotesTable
+      Events:
+        ProxyRoute:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref VotesApi
+            Path: /{proxy+}
+            Method: ANY
+        RootRoute:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref VotesApi
+            Path: /
+            Method: ANY
+
+Outputs:
+  ApiUrl:
+    Description: URL base de la API HTTP Gateway
+    Value: !Sub "https://${VotesApi}.execute-api.${AWS::Region}.amazonaws.com"
+  VotesTableName:
+    Description: Nombre de la tabla DynamoDB
+    Value: !Ref VotesTable
