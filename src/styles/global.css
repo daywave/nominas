@@ -108,7 +108,8 @@ dialog::backdrop { background: #242321bb; }
 .recommend-btn:hover { background: #f6ecdf; }
 .recommend-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .recommend-btn[aria-pressed="true"] .recommend-count { color: var(--accent); }
-.recommend-icon { font-size: 16px; }
+.recommend-icon { width: 20px; height: 20px; flex-shrink: 0; }
+.recommend-icon-down { transform: rotate(180deg); }
 .recommend-text { flex-grow: 1; text-align: left; }
 .recommend-count { font-size: 14px; font-variant-numeric: tabular-nums; font-weight: 800; }
 .recommend-status { font-size: 11px; margin: 8px 0 0; min-height: 16px; color: #625c52; }
@@ -204,5 +205,8 @@ body:has(dialog[open]) { overflow: hidden; }
 
 .vote-verification { margin-top: 20px; }
 #vote-turnstile { min-width: 0; }
-#vote-verification-status { font-size: 12px; }
+#vote-verification-status { display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 1.5; }
+.verification-spinner { width: 18px; height: 18px; flex-shrink: 0; animation: verification-spin 1s linear infinite; }
+@keyframes verification-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .verification-spinner { animation: none; } }
 .recommend-btn:disabled, .perception-btn:disabled { opacity: .55; cursor: not-allowed; }

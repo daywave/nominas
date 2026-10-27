@@ -61,12 +61,18 @@ test('opinion buttons require widget success, block concurrent clicks and ignore
   await votes.loadPerception('test', 'First person');
   assert.equal(env.widget.action, 'vote');
   assert.equal(env.widget.appearance, 'interaction-only');
-  assert.equal(env.el('vote-verification-status').textContent, '');
+  assert.match(env.el('vote-verification-message').textContent, /Verificando acceso/);
+  assert.equal(env.el('vote-verification-spinner').hidden, false);
   await env.el('vote-more').click();
   assert.equal(posts.length, 0);
   assert.equal(env.el('vote-more').disabled, true);
+  env.widget['before-interactive-callback']();
+  assert.match(env.el('vote-verification-message').textContent, /Completa la verificación/);
+  assert.equal(env.el('vote-verification-spinner').hidden, true);
 
   env.widget.callback('first-token');
+  assert.equal(env.el('vote-verification-status').hidden, true);
+  assert.equal(env.el('vote-verification-spinner').hidden, true);
   assert.equal(env.el('vote-more').disabled, false);
   const firstVote = env.el('vote-more').click();
   assert.equal('turnstile_token' in posts[0], false);
@@ -112,6 +118,8 @@ test('opinion buttons require widget success, block concurrent clicks and ignore
   env.widget.callback('refreshed-token');
   assert.equal(env.el('vote-more').disabled, false);
   env.widget['error-callback']();
+  assert.equal(env.el('vote-verification-spinner').hidden, true);
+  assert.equal(env.el('vote-verification-status').hidden, false);
   assert.equal(env.el('retry-verification').hidden, false);
   env.el('retry-verification').click();
   assert.equal(env.resets, 2);
@@ -127,7 +135,8 @@ test('without a public key payroll opinions stay disabled and no Turnstile scrip
   votes.setupPerceptionListeners();
   await votes.loadPerception('test', 'Person');
   assert.equal(env.el('vote-more').disabled, true);
-  assert.match(env.el('vote-verification-status').textContent, /no están habilitadas/);
+  assert.match(env.el('vote-verification-message').textContent, /no están habilitadas/);
+  assert.equal(env.el('vote-verification-spinner').hidden, true);
 });
 
 

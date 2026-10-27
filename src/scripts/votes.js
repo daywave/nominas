@@ -125,13 +125,17 @@ export async function loadPerception(universityId, fullName) {
   const requestGeneration = generation;
   abortController = new AbortController();
   if (!challenge) {
-    challenge = createTurnstile(getEl('vote-turnstile'), (passed, message, retryAllowed) => {
+    challenge = createTurnstile(getEl('vote-turnstile'), (passed, message, retryAllowed, busy) => {
       verified = passed;
       const status = getEl('vote-verification-status');
       if (status) {
-        status.textContent = message;
         status.hidden = !message;
+        status.setAttribute('aria-busy', String(busy));
       }
+      const label = getEl('vote-verification-message');
+      if (label) label.textContent = message;
+      const spinner = getEl('vote-verification-spinner');
+      if (spinner) spinner.hidden = !busy;
       const retry = getEl('retry-verification');
       if (retry) retry.hidden = !retryAllowed;
       updateVoteButtons();

@@ -28,9 +28,9 @@ function loadScript() {
 
 export function createTurnstile(container, onChange) {
   let api, widgetId, disposed = false;
-  const update = (verified, message = '', retryAllowed = false) => {
+  const update = (verified, message = '', retryAllowed = false, busy = false) => {
     if (disposed) return;
-    onChange(verified, message, retryAllowed);
+    onChange(verified, message, retryAllowed, busy);
   };
   return {
     async start() {
@@ -38,10 +38,11 @@ export function createTurnstile(container, onChange) {
         update(false, 'Las opiniones no están habilitadas en este sitio.');
         return;
       }
-      update(false);
+      update(false, 'Preparando la votación…', false, true);
       try {
         api = await loadScript();
         if (disposed) return;
+        update(false, 'Verificando acceso para opinar…', false, true);
         widgetId = api.render(container, {
           sitekey: container.dataset.sitekey,
           action: 'vote',
@@ -49,6 +50,7 @@ export function createTurnstile(container, onChange) {
           language: 'es',
           size: container.clientWidth < 300 ? 'compact' : 'flexible',
           callback: () => update(true),
+          'before-interactive-callback': () => update(false, 'Completa la verificación para opinar.'),
           'expired-callback': () => this.reset(),
           'timeout-callback': () => this.reset(),
           'error-callback': () => {
@@ -61,7 +63,7 @@ export function createTurnstile(container, onChange) {
       }
     },
     reset() {
-      update(false);
+      update(false, 'Verificando acceso para opinar…', false, true);
       if (disposed) return;
       if (widgetId !== undefined) api.reset(widgetId);
       else return this.start();
