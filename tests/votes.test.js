@@ -139,6 +139,30 @@ test('without a public key payroll opinions stay disabled and no Turnstile scrip
   assert.equal(env.el('vote-verification-spinner').hidden, true);
 });
 
+test('loading feedback stays visible if Turnstile finishes before opinion counts arrive', async t => {
+  const env = environment(t);
+  env.el('vote-turnstile').dataset.sitekey = 'test-sitekey';
+  let finishLoading;
+  globalThis.fetch = () => new Promise(resolve => { finishLoading = resolve; });
+  const votes = await import('../src/scripts/votes.js?loading-feedback');
+  t.after(() => votes.resetPerception());
+  const loading = votes.loadPerception('test', 'Person');
+  assert.equal(env.el('vote-verification-status').hidden, false);
+  assert.equal(env.el('vote-verification-spinner').hidden, false);
+  assert.match(env.el('vote-verification-message').textContent, /Preparando/);
+  await setImmediate();
+  env.widget.callback('verified');
+  assert.equal(env.el('vote-more').disabled, true);
+  assert.equal(env.el('vote-verification-status').hidden, false);
+  assert.equal(env.el('vote-verification-spinner').hidden, false);
+  assert.equal(env.el('vote-verification-message').textContent, 'Cargando opiniones…');
+  finishLoading(response(empty));
+  await loading;
+  assert.equal(env.el('vote-more').disabled, false);
+  assert.equal(env.el('vote-verification-status').hidden, true);
+  assert.equal(env.el('vote-verification-spinner').hidden, true);
+});
+
 
 test('a blocked Turnstile script can be retried and late loading cannot render a closed dialog', async t => {
   const env = environment(t);

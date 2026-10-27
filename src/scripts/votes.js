@@ -17,12 +17,26 @@ let verified = false;
 let loaded = false;
 let pending = false;
 let generation = 0;
+let verificationMessage = '';
+let verificationBusy = false;
+let loadingOpinions = false;
 
 function updateVoteButtons() {
   for (const id of ['vote-recommend-yes', 'vote-recommend-no', 'vote-more', 'vote-fair', 'vote-less']) {
     const button = getEl(id);
     if (button) button.disabled = !verified || !loaded || pending;
   }
+  const message = verificationMessage || (loadingOpinions ? 'Cargando opiniones…' : '');
+  const busy = verificationMessage ? verificationBusy : loadingOpinions;
+  const status = getEl('vote-verification-status');
+  if (status) {
+    status.hidden = !message;
+    status.setAttribute('aria-busy', String(busy));
+  }
+  const label = getEl('vote-verification-message');
+  if (label) label.textContent = message;
+  const spinner = getEl('vote-verification-spinner');
+  if (spinner) spinner.hidden = !busy;
 }
 
 const getEl = id => (typeof document !== 'undefined' ? (document.getElementById ? document.getElementById(id) : document.querySelector?.(`#${id}`)) : null);
@@ -124,18 +138,13 @@ export async function loadPerception(universityId, fullName) {
   resetPerception();
   const requestGeneration = generation;
   abortController = new AbortController();
+  loadingOpinions = true;
+  updateVoteButtons();
   if (!challenge) {
     challenge = createTurnstile(getEl('vote-turnstile'), (passed, message, retryAllowed, busy) => {
       verified = passed;
-      const status = getEl('vote-verification-status');
-      if (status) {
-        status.hidden = !message;
-        status.setAttribute('aria-busy', String(busy));
-      }
-      const label = getEl('vote-verification-message');
-      if (label) label.textContent = message;
-      const spinner = getEl('vote-verification-spinner');
-      if (spinner) spinner.hidden = !busy;
+      verificationMessage = message;
+      verificationBusy = busy;
       const retry = getEl('retry-verification');
       if (retry) retry.hidden = !retryAllowed;
       updateVoteButtons();
@@ -166,6 +175,7 @@ export async function loadPerception(universityId, fullName) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (generation !== requestGeneration) return;
+    loadingOpinions = false;
     loaded = true;
     updateVoteButtons();
 
@@ -186,6 +196,8 @@ export async function loadPerception(universityId, fullName) {
     renderUI();
   } catch (err) {
     if (err.name === 'AbortError' || generation !== requestGeneration) return;
+    loadingOpinions = false;
+    updateVoteButtons();
     if (salStatusEl) salStatusEl.textContent = 'No se pudieron sincronizar las opiniones recientes.';
   }
 }
@@ -194,6 +206,7 @@ export function resetPerception() {
   generation += 1;
   // Reset record state, preserving this page's widget and verification result.
   loaded = pending = false;
+  loadingOpinions = false;
   updateVoteButtons();
   if (abortController) {
     abortController.abort();

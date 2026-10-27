@@ -41,7 +41,7 @@ import Page from "../layouts/Page.astro";
       <div class="vote-verification">
         <div id="vote-turnstile" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || ''}></div>
         <p id="vote-verification-status" role="status" aria-live="polite" hidden>
-          <svg id="vote-verification-spinner" class="verification-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" hidden><circle cx="12" cy="12" r="9" opacity=".2"/><path d="M12 3a9 9 0 0 1 9 9" stroke-linecap="round"/></svg>
+          <span id="vote-verification-spinner" class="verification-indicator" aria-hidden="true" hidden><svg class="verification-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9" opacity=".2"/><path d="M12 3a9 9 0 0 1 9 9" stroke-linecap="round"/></svg></span>
           <span id="vote-verification-message"></span>
         </p>
         <button id="retry-verification" class="text-button" type="button" hidden>Reintentar verificación</button>
