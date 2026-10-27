@@ -2,14 +2,11 @@ import { Hono } from 'hono';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, TransactWriteCommand } from '@aws-sdk/lib-dynamodb';
 import crypto from 'node:crypto';
-import { verifyTurnstile } from '../turnstile.js';
 
 const client = new DynamoDBClient({});
 const ddb = DynamoDBDocumentClient.from(client);
 
 const TABLE_NAME = process.env.VOTES_TABLE || 'NominasVotes';
-const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY;
-const TURNSTILE_HOSTNAME = process.env.TURNSTILE_HOSTNAME;
 const SECRET_SALT = process.env.HASH_SALT || 'nominas_secret_salt_2026';
 
 const SALARY_CHOICES = ['more', 'fair', 'less', 'cancel', 'cancel_salary'];
@@ -67,7 +64,7 @@ votesRouter.post('/:prof_key', async (c) => {
     return c.json({ error: 'JSON inválido' }, 400);
   }
 
-  const { choice, category, voter_token, turnstile_token } = body || {};
+  const { choice, category, voter_token } = body || {};
 
   const isRecommend = category === 'recommend' || ['yes', 'no', 'cancel_recommend'].includes(choice);
   const isSalary = category === 'salary' || ['more', 'fair', 'less', 'cancel_salary'].includes(choice) || (!isRecommend && choice === 'cancel');
@@ -84,11 +81,6 @@ votesRouter.post('/:prof_key', async (c) => {
   if (!voter_token || typeof voter_token !== 'string' || voter_token.length < 10) {
     return c.json({ error: 'voter_token inválido' }, 400);
   }
-
-  const verificationError = await verifyTurnstile(turnstile_token, {
-    secret: TURNSTILE_SECRET, hostname: TURNSTILE_HOSTNAME,
-  });
-  if (verificationError) return c.json({ error: verificationError.error }, verificationError.status);
 
   const voterHash = crypto
     .createHmac('sha256', SECRET_SALT)

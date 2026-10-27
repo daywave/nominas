@@ -124,8 +124,8 @@ export async function loadPerception(universityId, fullName) {
   resetPerception();
   const requestGeneration = generation;
   abortController = new AbortController();
-  challenge = createTurnstile(getEl('vote-turnstile'), (token, message, retryAllowed) => {
-    verified = Boolean(token);
+  challenge = createTurnstile(getEl('vote-turnstile'), (passed, message, retryAllowed) => {
+    verified = passed;
     const status = getEl('vote-verification-status');
     if (status) status.textContent = message;
     const retry = getEl('retry-verification');
@@ -200,9 +200,6 @@ export function resetPerception() {
 
 async function castVote(choice, category = 'salary') {
   if (!currentProfKey || pending || !loaded || !verified) return;
-  const activeChallenge = challenge;
-  const turnstileToken = activeChallenge.takeToken();
-  if (!turnstileToken) return;
   const requestGeneration = generation;
   const profKey = currentProfKey;
   pending = true;
@@ -256,7 +253,6 @@ async function castVote(choice, category = 'salary') {
         choice: targetChoice,
         category,
         voter_token: getVoterToken(),
-        turnstile_token: turnstileToken,
       }),
     });
 
@@ -304,11 +300,10 @@ async function castVote(choice, category = 'salary') {
       setLocalChoice(STORAGE_SALARY_KEY, profKey, currentSalaryChoice);
     }
     renderUI();
-    if (statusEl) statusEl.textContent = 'No se pudo registrar tu opinión. Verifica e intenta nuevamente.';
+    if (statusEl) statusEl.textContent = 'No se pudo registrar tu opinión. Intenta nuevamente.';
   } finally {
     if (generation === requestGeneration) {
       pending = false;
-      activeChallenge.reset();
       updateVoteButtons();
     }
   }

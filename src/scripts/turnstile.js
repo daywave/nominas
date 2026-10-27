@@ -27,19 +27,18 @@ function loadScript() {
 }
 
 export function createTurnstile(container, onChange) {
-  let api, widgetId, token = '', disposed = false;
-  const update = (value, message = '', retryAllowed = false) => {
+  let api, widgetId, disposed = false;
+  const update = (verified, message = '', retryAllowed = false) => {
     if (disposed) return;
-    token = value;
-    onChange(value, message, retryAllowed);
+    onChange(verified, message, retryAllowed);
   };
   return {
     async start() {
       if (!container?.dataset.sitekey) {
-        update('', 'Las opiniones no están habilitadas en este sitio.');
+        update(false, 'Las opiniones no están habilitadas en este sitio.');
         return;
       }
-      update('', 'Verificando que no eres un robot…');
+      update(false, 'Verificando que no eres un robot…');
       try {
         api = await loadScript();
         if (disposed) return;
@@ -48,32 +47,26 @@ export function createTurnstile(container, onChange) {
           action: 'vote',
           language: 'es',
           size: container.clientWidth < 300 ? 'compact' : 'flexible',
-          callback: value => update(value),
+          callback: () => update(true),
           'expired-callback': () => this.reset(),
           'timeout-callback': () => this.reset(),
           'error-callback': () => {
-            update('', 'No se pudo verificar. Reintenta la verificación.', true);
+            update(false, 'No se pudo verificar. Reintenta la verificación.', true);
             return true;
           },
         });
       } catch {
-        update('', 'No se pudo cargar la verificación. Reintenta o revisa tu conexión.', true);
+        update(false, 'No se pudo cargar la verificación. Reintenta o revisa tu conexión.', true);
       }
     },
-    takeToken() {
-      const value = token;
-      update('');
-      return value;
-    },
     reset() {
-      update('', 'Verificando que no eres un robot…');
+      update(false, 'Verificando que no eres un robot…');
       if (disposed) return;
       if (widgetId !== undefined) api.reset(widgetId);
       else return this.start();
     },
     destroy() {
       disposed = true;
-      token = '';
       if (widgetId !== undefined) api.remove(widgetId);
     },
   };

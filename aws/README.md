@@ -1,68 +1,47 @@
-# Opinion service (AWS + Turnstile)
+# Opinion service (AWS)
 
-Start with the [project principles](../AGENTS.md) and [application architecture](../ARCHITECTURE.md). Payroll browsing stays static. This separate service stores recommendations and salary opinions; its failure must not prevent searching, reading, or sharing payroll records.
+Start with the [project principles](../AGENTS.md) and [application architecture](../ARCHITECTURE.md). Payroll browsing stays static. Lambda, DynamoDB and Hono store recommendations and salary opinions independently of payroll loading.
 
-Lambda, DynamoDB and Hono are retained. Turnstile protects writes; it does not verify student identity or guarantee one person per vote. Opinion totals are public participation, not official payroll information or a representative survey.
+## Voting interface and Turnstile
 
-## Request flow
+The approved scope uses Turnstile **only to enable voting buttons in the browser**. It is an interface check, not server-side bot protection. The backend does not validate Turnstile tokens, and direct API requests can bypass the browser check. CORS does not change that limitation. Do not describe this as verified voters, one person per vote, or protection against AWS spending.
 
-1. Opening a person dialog loads the Turnstile script and renders a Managed widget (compact below 300px of available width). Merely browsing the table does not load it.
-2. Voting is enabled only after counts load and a challenge token is available. One request can be sent at a time from the dialog.
-3. `POST /votes/{prof_key}` includes the existing `choice`, `category`, `voter_token`, plus `turnstile_token`.
-4. Lambda validates the token with Cloudflare **before any DynamoDB access**. Success must match the configured hostname and action `vote`.
-5. The token is consumed once. The widget resets after success or failure; changing/withdrawing a vote requires a fresh token. Expiration and widget errors disable voting until verification succeeds again.
+Opening a person dialog loads the widget. Buttons stay disabled until the widget succeeds and opinion counts load. Requests are serialized in the dialog; after a submission the buttons become available again while the widget remains valid. Expiration or widget errors disable them until the next successful verification. Changing profiles creates a new widget. Browsing payrolls does not require verification.
 
-Missing backend configuration returns 503; missing/invalid verification returns 403; verification provider failures return 502. Siteverify has a two-second timeout. Browser POST requests time out after ten seconds; an interrupted response does not prove that the server rejected a vote.
+## Frontend configuration
 
-`GET /votes/{prof_key}` remains public and does not require Turnstile. Invalid writes do not reach DynamoDB, but requests still invoke Lambda: Turnstile is not an AWS spending cap.
+Configure a Managed widget in Cloudflare Turnstile and authorize the site's hostname. Set `PUBLIC_TURNSTILE_SITE_KEY` in the frontend build environment, then rebuild/redeploy. This key is public and embedded in HTML. No Turnstile secret or hostname environment variable is used by Lambda.
 
-## Configuration
-
-| Location | Setting | Visibility |
-| --- | --- | --- |
-| Frontend build | `PUBLIC_TURNSTILE_SITE_KEY` | Public; embedded in HTML. |
-| Lambda environment | `TURNSTILE_SECRET_KEY` | Private; never include in frontend variables, commits, logs or screenshots. |
-| Lambda environment | `TURNSTILE_HOSTNAME` | Exact expected hostname, without protocol, port or path. |
-
-In Cloudflare Turnstile, use a **Managed** widget and authorize the production hostname. Put its public key in the frontend project's build environment, then rebuild/redeploy: changing an environment variable does not modify an existing static build. No npm dependency is needed; the official script loads directly from Cloudflare.
-
-For the existing Lambda deployment, its owner can set the two backend variables under **Configuration → Environment variables**, and deploy the updated Lambda code. Set the hostname to `cuantoganamiprofe.sebhdz.com`. Both halves must be updated together: deploying the protected backend first makes old clients unable to vote.
-
-The SAM template also declares `TurnstileSecretKey` (`NoEcho`) and `TurnstileHostname` parameters and maps them to those variables. Use the same settings when deploying through SAM; a future template deployment can overwrite console changes. Never save the secret in `samconfig.toml`, command history, parameter files or Git. `NoEcho` masks CloudFormation display; it does not sanitize local files. A blank secret deliberately disables writes.
-
-AWS CLI and SAM CLI are required only for deployment, not for running the payroll website:
-
-```sh
-sam build -t aws/template.yaml
-sam deploy --guided
-```
-
-When using guided deployment, do not save the secret parameter to a configuration file. Review the parameter values through the account owner's secure deployment process.
-
-**Current deployment distinction:** the frontend still points to a Lambda Function URL, while `template.yaml` creates an API Gateway HTTP API. CORS must be configured on the entry point actually used. Turnstile works with either; this change does not migrate endpoints. CORS is not bot protection or authentication.
-
-## Local development and checks
-
-Copy the public settings example to an ignored local file:
+For local development:
 
 ```sh
 cp .env.example .env
 npm run dev
 ```
 
-Without a public key, opinions stay disabled; payroll browsing still works. To exercise the widget locally, use Cloudflare's [official test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) and an isolated test backend configured with the matching test secret and `TURNSTILE_HOSTNAME=localhost`. The always-pass visible site key is `1x00000000000000000000AA`; its matching always-pass secret is `1x0000000000000000000000000000000AA`. Test tokens cannot be validated with a production secret. Never put test keys in production. The frontend API URL is currently set in `src/scripts/votes.js`; point a local experiment at the isolated test backend, not the live vote database.
+Without the public key, voting buttons remain disabled. For widget experiments use Cloudflare's [official test site keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/), never production test keys. The visible always-pass key is `1x00000000000000000000AA`. Use an isolated API for manual voting tests: the API URL is currently configured in `src/scripts/votes.js`.
+
+## Backend deployment
+
+AWS CLI and SAM CLI are needed only for deployment:
 
 ```sh
-npm test
-npm run build
+sam build -t aws/template.yaml
+sam deploy --guided
 ```
 
-Automated tests mock the widget, network and Siteverify; they make no live votes and require no AWS credentials. They cover missing configuration, rejected/expired/replayed responses, hostname/action mismatch, network failures, single-use tokens, concurrent clicks and switching profiles during a submission.
+If the previous server-side Turnstile integration was deployed, deploy the simplified backend as well; removing environment variables alone will not remove its validation. `TURNSTILE_SECRET_KEY` and `TURNSTILE_HOSTNAME` are no longer used and can be removed from that Lambda's configuration.
 
-Before production, manually check the widget on mobile/desktop, a valid vote, changing/withdrawing it, challenge errors and a blocked Cloudflare script. Verify that direct POST requests without a valid token are rejected and that payroll browsing still works when opinions are unavailable.
+The frontend currently calls a Lambda Function URL, while `template.yaml` creates an API Gateway HTTP API. Configure CORS on the entry point actually used. This change does not migrate endpoints.
 
-## Pending production guardrails
+| Method | Route | Responsibility |
+| --- | --- | --- |
+| GET | `/health` | Service health. |
+| GET | `/votes/{prof_key}` | Public opinion counts. |
+| POST | `/votes/{prof_key}` | Record, change or withdraw an opinion using `choice`, `category` and `voter_token`. |
 
-Turnstile integration does not complete the broader opinion-service review. AWS request/concurrency limits, budget alerts and a service shutdown procedure still need account-owner configuration. The existing university/name identity and database counter concurrency behavior also remain pending the agreed follow-up; this change does not migrate stored opinions or fix simultaneous writes from different clients.
+## Checks and limitations
 
-Reference: [client rendering](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/) and [server validation](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/).
+Run `npm test` and `npm run build`. Automated tests mock the widget and API, without live votes. They cover disabled buttons before verification, concurrent clicks, widget errors/expiration, missing configuration and stale responses when switching profiles. Check the widget manually on mobile and desktop after deployment.
+
+The university/name identity and database counter concurrency behavior remain unchanged. AWS request/concurrency limits, cost monitoring and service shutdown are separate account-owner decisions; a browser-only widget does not enforce them.
