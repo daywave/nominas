@@ -76,6 +76,9 @@ input::placeholder { color: #6e7276; opacity: 1; }
 .salary-label-small { display: block; font-size: 10px; margin-top: 5px; text-transform: uppercase; }
 .net-value { display: block; font-size: 12px; font-weight: 700; margin-top: 0; font-variant-numeric: tabular-nums; }
 .sort-note { margin: 0 0 12px; font-size: 12px; color: #5e574c; }
+.opinion-notice { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 16px; padding: 11px 14px; border: 2px solid var(--ink); background: var(--accent); color: var(--ink); }
+.opinion-notice strong { font: 900 24px/1.05 Impact, 'Arial Narrow', sans-serif; text-transform: uppercase; }
+.opinion-notice p { margin: 0; font-size: 11px; font-weight: 700; line-height: 1.5; }
 .payroll-table tr:hover td:not(.salary-cell) { background: #f5efe5; }
 .empty-message h3 { font-size: 17px; margin: 8px 0; }
 .empty-message p { font-size: 13px; margin: 0 0 8px; font-weight: 400; }
@@ -146,6 +149,8 @@ body:has(dialog[open]) { overflow: hidden; }
   .payroll-table { min-width: 840px; }
 }
 @media (max-width: 700px) {
+  .opinion-notice { padding: 10px 12px; }
+  .opinion-notice strong { font-size: 22px; }
   .table-scroll { --mobile-salary-width: clamp(118px, 35%, 170px); overflow-x: visible; }
   .filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .quick-filters { grid-column: 1 / -1; }
