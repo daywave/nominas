@@ -2,12 +2,14 @@ import { Hono } from 'hono';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, TransactWriteCommand } from '@aws-sdk/lib-dynamodb';
 import crypto from 'node:crypto';
+import { verifyTurnstile } from '../turnstile.js';
 
 const client = new DynamoDBClient({});
 const ddb = DynamoDBDocumentClient.from(client);
 
 const TABLE_NAME = process.env.VOTES_TABLE || 'NominasVotes';
 const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY;
+const TURNSTILE_HOSTNAME = process.env.TURNSTILE_HOSTNAME;
 const SECRET_SALT = process.env.HASH_SALT || 'nominas_secret_salt_2026';
 
 const SALARY_CHOICES = ['more', 'fair', 'less', 'cancel', 'cancel_salary'];
@@ -83,20 +85,10 @@ votesRouter.post('/:prof_key', async (c) => {
     return c.json({ error: 'voter_token inválido' }, 400);
   }
 
-  if (TURNSTILE_SECRET) {
-    if (!turnstile_token) return c.json({ error: 'Turnstile token requerido' }, 403);
-    try {
-      const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ secret: TURNSTILE_SECRET, response: turnstile_token }),
-      }).then((r) => r.json());
-
-      if (!verifyRes.success) return c.json({ error: 'Validación anti-bot rechazada' }, 403);
-    } catch {
-      return c.json({ error: 'Fallo al verificar protección anti-bot' }, 502);
-    }
-  }
+  const verificationError = await verifyTurnstile(turnstile_token, {
+    secret: TURNSTILE_SECRET, hostname: TURNSTILE_HOSTNAME,
+  });
+  if (verificationError) return c.json({ error: verificationError.error }, verificationError.status);
 
   const voterHash = crypto
     .createHmac('sha256', SECRET_SALT)

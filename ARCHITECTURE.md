@@ -10,7 +10,7 @@ Static build:      data/processed/ → catalog + search JSONs + two HTML pages
 Browser:           catalog → selected university JSON → search, filters, table, dialog
 ```
 
-Preparation runs only when invoked manually. The build reads prepared files already in the repository; it does not need raw downloads. Browser requests retrieve static files, not a runtime API or filesystem listing. Only each institution's latest prepared year is emitted. Older years may remain in Git but are not accessible as historical pages or search files.
+Preparation runs only when invoked manually. The build reads prepared files already in the repository; it does not need raw downloads. Payroll browser requests retrieve static files, not a runtime API or filesystem listing. The separate [opinion service](aws/README.md) uses AWS and Turnstile; it is not part of payroll loading or preparation. Only each institution's latest prepared year is emitted. Older years may remain in Git but are not accessible as historical pages or search files.
 
 ## Responsibilities
 

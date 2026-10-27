@@ -2,6 +2,17 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Nominas - API de Percepción Salarial con DynamoDB, Lambda y Hono
 
+Parameters:
+  TurnstileSecretKey:
+    Type: String
+    NoEcho: true
+    Default: ''
+    Description: Private Turnstile key. Never store it in source control or samconfig.
+  TurnstileHostname:
+    Type: String
+    Default: cuantoganamiprofe.sebhdz.com
+    Description: Exact hostname expected in Siteverify responses, without protocol or path.
+
 Globals:
   Function:
     Timeout: 5
@@ -41,6 +52,8 @@ Resources:
       Environment:
         Variables:
           VOTES_TABLE: !Ref VotesTable
+          TURNSTILE_SECRET_KEY: !Ref TurnstileSecretKey
+          TURNSTILE_HOSTNAME: !Ref TurnstileHostname
           HASH_SALT: 'nominas_secret_salt_2026'
       Policies:
         - DynamoDBCrudPolicy:

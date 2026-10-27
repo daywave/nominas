@@ -42,7 +42,7 @@ A human must explicitly approve data changes before they reach production. An ag
 
 ## Technical boundaries
 
-- Keep the site static. There is no runtime backend or database.
+- Keep payroll browsing static and independent of runtime services. The approved exception is the separate AWS opinion service; failures there must not prevent payroll browsing. See [the opinion service guide](aws/README.md) for its configuration and limits.
 - Use Astro for static generation, with CSS and browser JavaScript for the interface.
 - Search, filters, pagination, and interactive results run in the browser.
 - A JSON file generated at build time is a static asset, not a runtime API.

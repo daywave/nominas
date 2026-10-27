@@ -1,4 +1,5 @@
 import { getProfessorKey } from '../lib/professor-key.js';
+import { createTurnstile } from './turnstile.js';
 
 const API_BASE_URL = 'https://vd3xlkw2cplwb2azb27434xd6y0wfmxh.lambda-url.us-east-2.on.aws';
 const STORAGE_TOKEN_KEY = 'nominas_voter_token';
@@ -11,6 +12,18 @@ let currentRecStats = { recommends_yes: 0, recommends_no: 0, total_recommendatio
 let currentSalaryChoice = null;
 let currentRecChoice = null;
 let abortController = null;
+let challenge = null;
+let verified = false;
+let loaded = false;
+let pending = false;
+let generation = 0;
+
+function updateVoteButtons() {
+  for (const id of ['vote-recommend-yes', 'vote-recommend-no', 'vote-more', 'vote-fair', 'vote-less']) {
+    const button = getEl(id);
+    if (button) button.disabled = !verified || !loaded || pending;
+  }
+}
 
 const getEl = id => (typeof document !== 'undefined' ? (document.getElementById ? document.getElementById(id) : document.querySelector?.(`#${id}`)) : null);
 
@@ -108,8 +121,18 @@ function renderUI() {
 }
 
 export async function loadPerception(universityId, fullName) {
-  if (abortController) abortController.abort();
+  resetPerception();
+  const requestGeneration = generation;
   abortController = new AbortController();
+  challenge = createTurnstile(getEl('vote-turnstile'), (token, message, retryAllowed) => {
+    verified = Boolean(token);
+    const status = getEl('vote-verification-status');
+    if (status) status.textContent = message;
+    const retry = getEl('retry-verification');
+    if (retry) retry.hidden = !retryAllowed;
+    updateVoteButtons();
+  });
+  challenge.start();
 
   currentProfKey = getProfessorKey(universityId, fullName);
   const salaryMap = getLocalMap(STORAGE_SALARY_KEY);
@@ -133,6 +156,9 @@ export async function loadPerception(universityId, fullName) {
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
+    if (generation !== requestGeneration) return;
+    loaded = true;
+    updateVoteButtons();
 
     currentSalaryStats = {
       deserves_more: data.deserves_more || 0,
@@ -150,12 +176,17 @@ export async function loadPerception(universityId, fullName) {
     if (salStatusEl) salStatusEl.textContent = '';
     renderUI();
   } catch (err) {
-    if (err.name === 'AbortError') return;
+    if (err.name === 'AbortError' || generation !== requestGeneration) return;
     if (salStatusEl) salStatusEl.textContent = 'No se pudieron sincronizar las opiniones recientes.';
   }
 }
 
 export function resetPerception() {
+  generation += 1;
+  challenge?.destroy();
+  challenge = null;
+  verified = loaded = pending = false;
+  updateVoteButtons();
   if (abortController) {
     abortController.abort();
     abortController = null;
@@ -168,7 +199,14 @@ export function resetPerception() {
 }
 
 async function castVote(choice, category = 'salary') {
-  if (!currentProfKey) return;
+  if (!currentProfKey || pending || !loaded || !verified) return;
+  const activeChallenge = challenge;
+  const turnstileToken = activeChallenge.takeToken();
+  if (!turnstileToken) return;
+  const requestGeneration = generation;
+  const profKey = currentProfKey;
+  pending = true;
+  updateVoteButtons();
 
   const isRec = category === 'recommend';
   const statusEl = getEl(isRec ? 'recommend-status' : 'perception-status');
@@ -188,7 +226,7 @@ async function castVote(choice, category = 'salary') {
     currentRecStats.recommends_no = Math.max(0, currentRecStats.recommends_no);
     currentRecStats.total_recommendations = Math.max(0, currentRecStats.total_recommendations);
     currentRecChoice = targetChoice === 'cancel' ? null : targetChoice;
-    setLocalChoice(STORAGE_REC_KEY, currentProfKey, currentRecChoice);
+    setLocalChoice(STORAGE_REC_KEY, profKey, currentRecChoice);
   } else {
     if (previousChoice === 'more') { currentSalaryStats.deserves_more -= 1; currentSalaryStats.total_votes -= 1; }
     if (previousChoice === 'fair') { currentSalaryStats.is_fair -= 1; currentSalaryStats.total_votes -= 1; }
@@ -203,25 +241,31 @@ async function castVote(choice, category = 'salary') {
     currentSalaryStats.deserves_less = Math.max(0, currentSalaryStats.deserves_less);
     currentSalaryStats.total_votes = Math.max(0, currentSalaryStats.total_votes);
     currentSalaryChoice = targetChoice === 'cancel' ? null : targetChoice;
-    setLocalChoice(STORAGE_SALARY_KEY, currentProfKey, currentSalaryChoice);
+    setLocalChoice(STORAGE_SALARY_KEY, profKey, currentSalaryChoice);
   }
 
   renderUI();
-  if (statusEl) statusEl.textContent = targetChoice === 'cancel' ? 'Opinión retirada' : 'Opinión registrada';
+  if (statusEl) statusEl.textContent = 'Enviando opinión…';
 
   try {
-    const res = await fetch(`${API_BASE_URL}/votes/${currentProfKey}`, {
+    const res = await fetch(`${API_BASE_URL}/votes/${profKey}`, {
       method: 'POST',
+      signal: AbortSignal.timeout(10000),
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         choice: targetChoice,
         category,
         voter_token: getVoterToken(),
+        turnstile_token: turnstileToken,
       }),
     });
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
+    if (generation !== requestGeneration) {
+      setLocalChoice(isRec ? STORAGE_REC_KEY : STORAGE_SALARY_KEY, profKey, data.user_choice || null);
+      return;
+    }
 
     if (isRec) {
       currentRecStats = {
@@ -231,7 +275,7 @@ async function castVote(choice, category = 'salary') {
         recommend_percentage: data.recommend_percentage ?? null,
       };
       currentRecChoice = data.user_choice || null;
-      setLocalChoice(STORAGE_REC_KEY, currentProfKey, currentRecChoice);
+      setLocalChoice(STORAGE_REC_KEY, profKey, currentRecChoice);
     } else {
       currentSalaryStats = {
         deserves_more: data.deserves_more || 0,
@@ -240,26 +284,38 @@ async function castVote(choice, category = 'salary') {
         total_votes: data.total_votes || 0,
       };
       currentSalaryChoice = data.user_choice || null;
-      setLocalChoice(STORAGE_SALARY_KEY, currentProfKey, currentSalaryChoice);
+      setLocalChoice(STORAGE_SALARY_KEY, profKey, currentSalaryChoice);
     }
 
     renderUI();
+    if (statusEl) statusEl.textContent = targetChoice === 'cancel' ? 'Opinión retirada' : 'Opinión registrada';
   } catch {
+    if (generation !== requestGeneration) {
+      setLocalChoice(isRec ? STORAGE_REC_KEY : STORAGE_SALARY_KEY, profKey, previousChoice);
+      return;
+    }
     if (isRec) {
       currentRecChoice = previousChoice;
       currentRecStats = previousStats;
-      setLocalChoice(STORAGE_REC_KEY, currentProfKey, currentRecChoice);
+      setLocalChoice(STORAGE_REC_KEY, profKey, currentRecChoice);
     } else {
       currentSalaryChoice = previousChoice;
       currentSalaryStats = previousStats;
-      setLocalChoice(STORAGE_SALARY_KEY, currentProfKey, currentSalaryChoice);
+      setLocalChoice(STORAGE_SALARY_KEY, profKey, currentSalaryChoice);
     }
     renderUI();
-    if (statusEl) statusEl.textContent = 'Hubo un error al registrar tu opinión. Intenta nuevamente.';
+    if (statusEl) statusEl.textContent = 'No se pudo registrar tu opinión. Verifica e intenta nuevamente.';
+  } finally {
+    if (generation === requestGeneration) {
+      pending = false;
+      activeChallenge.reset();
+      updateVoteButtons();
+    }
   }
 }
 
 export function setupPerceptionListeners() {
+  getEl('retry-verification')?.addEventListener('click', () => challenge?.reset());
   const btnRecYes = getEl('vote-recommend-yes');
   const btnRecNo = getEl('vote-recommend-no');
 

@@ -196,3 +196,8 @@ body:has(dialog[open]) { overflow: hidden; }
   .perception-btn { flex-direction: row; justify-content: space-between; padding: 10px 14px; }
   .person-source { flex-direction: column; align-items: flex-start; }
 }
+
+.vote-verification { margin-top: 20px; }
+#vote-turnstile { min-width: 0; }
+#vote-verification-status { font-size: 12px; }
+.recommend-btn:disabled, .perception-btn:disabled { opacity: .55; cursor: not-allowed; }

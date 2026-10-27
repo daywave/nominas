@@ -2,7 +2,7 @@
 
 An independent portal for finding the reported remuneration of professors and staff at public universities in Mexico. Help people find a person, read their reported pay, and share the result. Actual coverage comes from the prepared data included in this repository, not a claim of complete national coverage.
 
-The website is static Astro with CSS and browser JavaScript. Payroll preparation is a separate local Node.js tool. There is no runtime backend or database.
+The website is static Astro with CSS and browser JavaScript. Payroll preparation is a separate local Node.js tool. Payroll browsing has no runtime backend or database. The separate [AWS opinion service](aws/README.md) stores public opinions and uses Turnstile; it is not required to browse payrolls.
 
 ## Find your task
 
