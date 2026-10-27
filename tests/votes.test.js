@@ -31,17 +31,18 @@ function environment(t) {
     return controls.get(id);
   };
   const storage = new Map();
-  let widget, resets = 0;
+  let widget, resets = 0, renders = 0, removals = 0;
   Object.assign(globalThis, {
     document: { getElementById: el },
     window: { turnstile: {
-      render(_container, options) { widget = options; return 'widget'; },
+      render(_container, options) { renders++; widget = options; return 'widget'; },
       reset() { resets++; },
-      remove() {},
+      remove() { removals++; },
     } },
     localStorage: { getItem: key => storage.get(key) || null, setItem: (key, value) => storage.set(key, value) },
   });
-  return { el, storage, get widget() { return widget; }, get resets() { return resets; } };
+  return { el, storage, get widget() { return widget; }, get resets() { return resets; },
+    get renders() { return renders; }, get removals() { return removals; } };
 }
 
 test('opinion buttons require widget success, block concurrent clicks and ignore stale profile responses', async t => {
@@ -59,6 +60,8 @@ test('opinion buttons require widget success, block concurrent clicks and ignore
   };
   await votes.loadPerception('test', 'First person');
   assert.equal(env.widget.action, 'vote');
+  assert.equal(env.widget.appearance, 'interaction-only');
+  assert.equal(env.el('vote-verification-status').textContent, '');
   await env.el('vote-more').click();
   assert.equal(posts.length, 0);
   assert.equal(env.el('vote-more').disabled, true);
@@ -86,8 +89,14 @@ test('opinion buttons require widget success, block concurrent clicks and ignore
 
   env.widget.callback('third-token');
   const staleVote = env.el('vote-less').click();
+  const firstWidget = env.widget;
+  votes.resetPerception();
+  assert.equal(env.el('vote-more').disabled, true, 'closed profiles cannot submit votes');
   await votes.loadPerception('test', 'Second person');
-  env.widget.callback('new-profile-token');
+  assert.equal(env.widget, firstWidget);
+  assert.equal(env.renders, 1, 'opening another profile reuses the widget');
+  assert.equal(env.removals, 0, 'closing a profile does not destroy verification');
+  assert.equal(env.el('vote-more').disabled, false, 'verification survives profile changes');
   finishPost(response({ ...empty, deserves_less: 1, total_votes: 1, user_choice: 'less' }));
   await staleVote;
   assert.equal(env.el('count-less').textContent, '0');
@@ -98,6 +107,10 @@ test('opinion buttons require widget success, block concurrent clicks and ignore
   env.widget['expired-callback']();
   assert.equal(env.el('vote-more').disabled, true);
   assert.equal(env.resets, 1);
+  await env.el('vote-more').click();
+  assert.equal(posts.length, 3, 'expiration blocks new votes');
+  env.widget.callback('refreshed-token');
+  assert.equal(env.el('vote-more').disabled, false);
   env.widget['error-callback']();
   assert.equal(env.el('retry-verification').hidden, false);
   env.el('retry-verification').click();

@@ -38,13 +38,14 @@ export function createTurnstile(container, onChange) {
         update(false, 'Las opiniones no están habilitadas en este sitio.');
         return;
       }
-      update(false, 'Verificando que no eres un robot…');
+      update(false);
       try {
         api = await loadScript();
         if (disposed) return;
         widgetId = api.render(container, {
           sitekey: container.dataset.sitekey,
           action: 'vote',
+          appearance: 'interaction-only',
           language: 'es',
           size: container.clientWidth < 300 ? 'compact' : 'flexible',
           callback: () => update(true),
@@ -60,7 +61,7 @@ export function createTurnstile(container, onChange) {
       }
     },
     reset() {
-      update(false, 'Verificando que no eres un robot…');
+      update(false);
       if (disposed) return;
       if (widgetId !== undefined) api.reset(widgetId);
       else return this.start();

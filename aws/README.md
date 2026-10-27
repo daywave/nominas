@@ -6,7 +6,7 @@ Start with the [project principles](../AGENTS.md) and [application architecture]
 
 The approved scope uses Turnstile **only to enable voting buttons in the browser**. It is an interface check, not server-side bot protection. The backend does not validate Turnstile tokens, and direct API requests can bypass the browser check. CORS does not change that limitation. Do not describe this as verified voters, one person per vote, or protection against AWS spending.
 
-Opening a person dialog loads the widget. Buttons stay disabled until the widget succeeds and opinion counts load. Requests are serialized in the dialog; after a submission the buttons become available again while the widget remains valid. Expiration or widget errors disable them until the next successful verification. Changing profiles creates a new widget. Browsing payrolls does not require verification.
+Opening the first person dialog loads one widget per page. Managed mode uses `appearance: 'interaction-only'`: automatic checks run quietly and the widget appears only if Cloudflare requires interaction. Buttons stay disabled until the widget succeeds and opinion counts load. Closing or changing profiles preserves the widget and its current verification; reloading the page starts fresh. Requests are serialized in the dialog. Expiration or widget errors disable voting until verification succeeds again. Browsing payrolls does not require verification.
 
 ## Frontend configuration
 

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eae2d2">
+  <meta name="robots" content="noindex">
+  <title>Corre la voz · ¿Cuánto gana mi profe?</title>
+  <style>
+    :root { color-scheme: light; --sand: #eae2d2; --ink: #242321; --mustard: #d9ad42; --white: #fffef8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 28px 16px; background: #d3ccbf; color: var(--ink); font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; }
+    a { color: inherit; }
+    .flyer { container-type: inline-size; width: min(100%, 864px); margin: auto; background: var(--sand); }
+    .poster { aspect-ratio: 4 / 5; display: flex; flex-direction: column; overflow: hidden; }
+    .tape { flex-shrink: 0; overflow: hidden; white-space: nowrap; padding: 1.1cqw 0; background: var(--mustard); border-bottom: .35cqw solid var(--ink); font-size: 1.25cqw; font-weight: 700; letter-spacing: .17em; text-align: center; }
+    .content { flex: 1; display: flex; flex-direction: column; padding: 3cqw 5.2cqw 0; }
+    .masthead { display: flex; justify-content: space-between; align-items: baseline; gap: 2cqw; padding-bottom: 1.5cqw; border-bottom: .2cqw solid var(--ink); }
+    .brand { margin: 0; font: bold 2.8cqw/1.2 Georgia, 'Times New Roman', serif; letter-spacing: -.05em; }
+    .edition { margin: 0; font-size: 1.1cqw; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+    .eyebrow { margin: 2cqw 0 1.8cqw; font-size: 1.4cqw; font-weight: 700; text-transform: uppercase; letter-spacing: .15em; }
+    h1 { margin: 0; font-family: Impact, 'Arial Narrow', 'Helvetica Neue', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -.035em; line-height: .91; }
+    h1 span { display: block; }
+    .first { font-size: 17cqw; }
+    .second { font-size: 18cqw; }
+    .third { width: fit-content; margin: 1.2cqw 0 0 -.5cqw; padding: 0 1.6cqw 1cqw .5cqw; background: var(--mustard); font-size: 22cqw; }
+    .intro { margin: 2cqw 0 2cqw; max-width: 79cqw; font: 2.3cqw/1.33 Georgia, 'Times New Roman', serif; }
+    .intro strong { font-weight: 700; }
+    .callout { display: grid; grid-template-columns: minmax(0, 1fr) 21cqw; margin-top: auto; border: .35cqw solid var(--ink); background: var(--ink); color: var(--sand); }
+    .invitation { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 2.2cqw; }
+    .scan-label { margin: 0 0 1cqw; font-size: 1.35cqw; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--mustard); }
+    .invitation h2 { margin: 0; font: 900 4.6cqw/.99 Impact, 'Arial Narrow', sans-serif; letter-spacing: -.015em; text-transform: uppercase; }
+    .steps { margin: 1.7cqw 0 0; font-size: 1.5cqw; line-height: 1.6; }
+    .qr { display: flex; align-items: center; justify-content: center; padding: 1.5cqw; background: #fff; }
+    .qr svg { display: block; width: 100%; height: auto; }
+    .address { margin: 0; padding: 1.7cqw 0; text-align: center; font-size: 1.65cqw; font-weight: 700; letter-spacing: -.015em; }
+    .address a { text-decoration-thickness: .12cqw; text-underline-offset: .35cqw; overflow-wrap: anywhere; }
+    .closing { display: flex; justify-content: space-between; align-items: center; gap: 2cqw; padding: 1.7cqw 0; border-top: .15cqw dotted var(--ink); }
+    .closing p { margin: 0; }
+    .manifesto { font: italic 2.4cqw/1.15 Georgia, 'Times New Roman', serif; }
+    .independence { max-width: 36cqw; text-align: right; font-size: 1.05cqw; line-height: 1.5; }
+    .bottom-tape { padding: 1.4cqw; background: var(--mustard); text-align: center; font-size: 1.5cqw; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; border-top: .35cqw solid var(--ink); }
+    .tools { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 24px; max-width: 864px; margin: 20px auto 0; font-size: 12px; }
+    .tools button, .tools a { border: 1px solid var(--ink); border-radius: 0; padding: 10px 14px; background: transparent; color: var(--ink); font: inherit; text-decoration: none; cursor: pointer; }
+    .tools p { margin: 0; line-height: 1.6; }
+    :focus-visible { outline: 3px solid var(--mustard); outline-offset: 4px; }
+    @media (max-width: 500px) { body { padding: 0 0 20px; } .tools { padding: 0 16px; } .tools p { text-align: center; } }
+    @page { size: A4 portrait; margin: 10mm; }
+    @media print {
+      html, body { margin: 0; padding: 0; background: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .flyer { width: 190mm; margin: 0 auto; break-inside: avoid; }
+      .tools { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="flyer" aria-label="Flyer de ¿Cuánto gana mi profe?">
+    <article class="poster">
+      <div class="tape" aria-hidden="true">INFORMACIÓN PÚBLICA · INFORMACIÓN PÚBLICA · INFORMACIÓN PÚBLICA · INFORMACIÓN PÚBLICA</div>
+      <div class="content">
+        <header class="masthead">
+          <p class="brand">¿Cuánto gana mi profe?</p>
+          <p class="edition">Universidades públicas · México</p>
+        </header>
+        <p class="eyebrow">La pregunta que sí puedes hacer.</p>
+        <h1><span class="first">¿Cuánto</span> <span class="second">gana mi</span> <span class="third">profe?</span></h1>
+        <p class="intro">Sueldos de profesores y funcionarios.<br><strong>Se pagan con dinero público, así que<br>se leen con ojos públicos.</strong></p>
+        <section class="callout" aria-labelledby="scan-heading">
+          <div class="invitation">
+            <p class="scan-label">Escanea. Busca. Comparte.</p>
+            <h2 id="scan-heading">Ponle nombre<br>a la nómina.</h2>
+            <p class="steps">Encuentra tu universidad.<br>Después, busca a tu profe.</p>
+          </div>
+          <a class="qr" href="https://cuantoganamiprofe.sebhdz.com/" aria-label="Entrar a ¿Cuánto gana mi profe?">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" role="img" aria-labelledby="qr-title" shape-rendering="crispEdges"><title id="qr-title">Escanea para entrar a ¿Cuánto gana mi profe?</title><rect width="39" height="39" fill="#fff"/><path d="M5 33h1v1h-1zM6 33h1v1h-1zM7 33h1v1h-1zM8 33h1v1h-1zM9 33h1v1h-1zM10 33h1v1h-1zM11 33h1v1h-1zM15 33h1v1h-1zM16 33h1v1h-1zM18 33h1v1h-1zM22 33h1v1h-1zM23 33h1v1h-1zM24 33h1v1h-1zM25 33h1v1h-1zM27 33h1v1h-1zM28 33h1v1h-1zM29 33h1v1h-1zM30 33h1v1h-1zM31 33h1v1h-1zM32 33h1v1h-1zM33 33h1v1h-1zM5 32h1v1h-1zM11 32h1v1h-1zM14 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM18 32h1v1h-1zM19 32h1v1h-1zM20 32h1v1h-1zM21 32h1v1h-1zM22 32h1v1h-1zM27 32h1v1h-1zM33 32h1v1h-1zM5 31h1v1h-1zM7 31h1v1h-1zM8 31h1v1h-1zM9 31h1v1h-1zM11 31h1v1h-1zM13 31h1v1h-1zM16 31h1v1h-1zM17 31h1v1h-1zM19 31h1v1h-1zM20 31h1v1h-1zM21 31h1v1h-1zM24 31h1v1h-1zM27 31h1v1h-1zM29 31h1v1h-1zM30 31h1v1h-1zM31 31h1v1h-1zM33 31h1v1h-1zM5 30h1v1h-1zM7 30h1v1h-1zM8 30h1v1h-1zM9 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM14 30h1v1h-1zM16 30h1v1h-1zM22 30h1v1h-1zM25 30h1v1h-1zM27 30h1v1h-1zM29 30h1v1h-1zM30 30h1v1h-1zM31 30h1v1h-1zM33 30h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM8 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM13 29h1v1h-1zM14 29h1v1h-1zM15 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM21 29h1v1h-1zM23 29h1v1h-1zM24 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM29 29h1v1h-1zM30 29h1v1h-1zM31 29h1v1h-1zM33 29h1v1h-1zM5 28h1v1h-1zM11 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM15 28h1v1h-1zM18 28h1v1h-1zM19 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM27 28h1v1h-1zM33 28h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM7 27h1v1h-1zM8 27h1v1h-1zM9 27h1v1h-1zM10 27h1v1h-1zM11 27h1v1h-1zM13 27h1v1h-1zM15 27h1v1h-1zM17 27h1v1h-1zM19 27h1v1h-1zM21 27h1v1h-1zM23 27h1v1h-1zM25 27h1v1h-1zM27 27h1v1h-1zM28 27h1v1h-1zM29 27h1v1h-1zM30 27h1v1h-1zM31 27h1v1h-1zM32 27h1v1h-1zM33 27h1v1h-1zM13 26h1v1h-1zM14 26h1v1h-1zM16 26h1v1h-1zM17 26h1v1h-1zM18 26h1v1h-1zM21 26h1v1h-1zM23 26h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM8 25h1v1h-1zM9 25h1v1h-1zM10 25h1v1h-1zM11 25h1v1h-1zM14 25h1v1h-1zM19 25h1v1h-1zM22 25h1v1h-1zM25 25h1v1h-1zM27 25h1v1h-1zM28 25h1v1h-1zM29 25h1v1h-1zM30 25h1v1h-1zM31 25h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM9 24h1v1h-1zM12 24h1v1h-1zM14 24h1v1h-1zM15 24h1v1h-1zM16 24h1v1h-1zM21 24h1v1h-1zM23 24h1v1h-1zM24 24h1v1h-1zM25 24h1v1h-1zM27 24h1v1h-1zM28 24h1v1h-1zM29 24h1v1h-1zM33 24h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM8 23h1v1h-1zM10 23h1v1h-1zM11 23h1v1h-1zM12 23h1v1h-1zM14 23h1v1h-1zM15 23h1v1h-1zM16 23h1v1h-1zM20 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM16 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM30 22h1v1h-1zM32 22h1v1h-1zM6 21h1v1h-1zM8 21h1v1h-1zM11 21h1v1h-1zM12 21h1v1h-1zM13 21h1v1h-1zM16 21h1v1h-1zM20 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM5 20h1v1h-1zM7 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM23 20h1v1h-1zM24 20h1v1h-1zM25 20h1v1h-1zM26 20h1v1h-1zM27 20h1v1h-1zM28 20h1v1h-1zM29 20h1v1h-1zM33 20h1v1h-1zM6 19h1v1h-1zM7 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM17 19h1v1h-1zM18 19h1v1h-1zM19 19h1v1h-1zM20 19h1v1h-1zM22 19h1v1h-1zM25 19h1v1h-1zM27 19h1v1h-1zM28 19h1v1h-1zM29 19h1v1h-1zM30 19h1v1h-1zM31 19h1v1h-1zM10 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM21 18h1v1h-1zM23 18h1v1h-1zM25 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM32 18h1v1h-1zM7 17h1v1h-1zM8 17h1v1h-1zM11 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM22 17h1v1h-1zM24 17h1v1h-1zM30 17h1v1h-1zM31 17h1v1h-1zM5 16h1v1h-1zM8 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM14 16h1v1h-1zM24 16h1v1h-1zM25 16h1v1h-1zM26 16h1v1h-1zM27 16h1v1h-1zM28 16h1v1h-1zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM17 15h1v1h-1zM20 15h1v1h-1zM22 15h1v1h-1zM23 15h1v1h-1zM25 15h1v1h-1zM28 15h1v1h-1zM29 15h1v1h-1zM31 15h1v1h-1zM5 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM12 14h1v1h-1zM14 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM27 14h1v1h-1zM28 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM5 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM21 13h1v1h-1zM22 13h1v1h-1zM25 13h1v1h-1zM26 13h1v1h-1zM27 13h1v1h-1zM28 13h1v1h-1zM29 13h1v1h-1zM31 13h1v1h-1zM32 13h1v1h-1zM33 13h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM15 12h1v1h-1zM18 12h1v1h-1zM19 12h1v1h-1zM21 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM29 12h1v1h-1zM30 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM33 12h1v1h-1zM5 11h1v1h-1zM6 11h1v1h-1zM7 11h1v1h-1zM8 11h1v1h-1zM9 11h1v1h-1zM10 11h1v1h-1zM11 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM20 11h1v1h-1zM24 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h1v1h-1zM30 11h1v1h-1zM31 11h1v1h-1zM5 10h1v1h-1zM11 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM21 10h1v1h-1zM24 10h1v1h-1zM25 10h1v1h-1zM29 10h1v1h-1zM5 9h1v1h-1zM7 9h1v1h-1zM8 9h1v1h-1zM9 9h1v1h-1zM11 9h1v1h-1zM13 9h1v1h-1zM16 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM22 9h1v1h-1zM25 9h1v1h-1zM26 9h1v1h-1zM27 9h1v1h-1zM28 9h1v1h-1zM29 9h1v1h-1zM31 9h1v1h-1zM5 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM9 8h1v1h-1zM11 8h1v1h-1zM13 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM21 8h1v1h-1zM23 8h1v1h-1zM25 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM31 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM5 7h1v1h-1zM7 7h1v1h-1zM8 7h1v1h-1zM9 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM14 7h1v1h-1zM15 7h1v1h-1zM16 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM20 7h1v1h-1zM22 7h1v1h-1zM23 7h1v1h-1zM24 7h1v1h-1zM25 7h1v1h-1zM26 7h1v1h-1zM27 7h1v1h-1zM28 7h1v1h-1zM29 7h1v1h-1zM30 7h1v1h-1zM31 7h1v1h-1zM32 7h1v1h-1zM5 6h1v1h-1zM11 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM26 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM7 5h1v1h-1zM8 5h1v1h-1zM9 5h1v1h-1zM10 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM17 5h1v1h-1zM22 5h1v1h-1zM24 5h1v1h-1zM29 5h1v1h-1zM31 5h1v1h-1z" fill="#242321"/></svg>
+          </a>
+        </section>
+        <p class="address"><a href="https://cuantoganamiprofe.sebhdz.com/">cuantoganamiprofe.sebhdz.com</a></p>
+        <footer class="closing">
+          <p class="manifesto">La transparencia no es un favor.</p>
+          <p class="independence">Datos publicados en la PNT.<br>Proyecto independiente, sin afiliación institucional.</p>
+        </footer>
+      </div>
+      <div class="bottom-tape">Los datos públicos son hechos para leerse.</div>
+    </article>
+  </main>
+  <aside class="tools" aria-label="Opciones del flyer">
+    <button type="button" onclick="window.print()">Imprimir / guardar PDF</button>
+    <a href="https://cuantoganamiprofe.sebhdz.com/">Entrar al sitio</a>
+    <p>Para compartir como imagen: captura solo el cartel.</p>
+  </aside>
+</body>
+</html>

@@ -124,15 +124,20 @@ export async function loadPerception(universityId, fullName) {
   resetPerception();
   const requestGeneration = generation;
   abortController = new AbortController();
-  challenge = createTurnstile(getEl('vote-turnstile'), (passed, message, retryAllowed) => {
-    verified = passed;
-    const status = getEl('vote-verification-status');
-    if (status) status.textContent = message;
-    const retry = getEl('retry-verification');
-    if (retry) retry.hidden = !retryAllowed;
-    updateVoteButtons();
-  });
-  challenge.start();
+  if (!challenge) {
+    challenge = createTurnstile(getEl('vote-turnstile'), (passed, message, retryAllowed) => {
+      verified = passed;
+      const status = getEl('vote-verification-status');
+      if (status) {
+        status.textContent = message;
+        status.hidden = !message;
+      }
+      const retry = getEl('retry-verification');
+      if (retry) retry.hidden = !retryAllowed;
+      updateVoteButtons();
+    });
+    challenge.start();
+  }
 
   currentProfKey = getProfessorKey(universityId, fullName);
   const salaryMap = getLocalMap(STORAGE_SALARY_KEY);
@@ -183,9 +188,8 @@ export async function loadPerception(universityId, fullName) {
 
 export function resetPerception() {
   generation += 1;
-  challenge?.destroy();
-  challenge = null;
-  verified = loaded = pending = false;
+  // Reset record state, preserving this page's widget and verification result.
+  loaded = pending = false;
   updateVoteButtons();
   if (abortController) {
     abortController.abort();
